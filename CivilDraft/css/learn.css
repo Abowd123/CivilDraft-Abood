@@ -1,0 +1,236 @@
+/* ═══ الواجهة التعليمية ═══ المرحلة ١ — js/ui/learn.js
+   خريطةُ محطّاتٍ على خطٍّ واحد (لا شبكةَ بطاقات)، ومدرّبٌ صغيرٌ أسفل
+   اللوحة، وإضاءةٌ حول الزرّ، وشبحٌ فوق اللوحة. الألوانُ رموزُ theme.css
+   فتعمل السمتان، والمددُ مضاعفاتُ --t فتُصفَّر مع تقليل الحركة. */
+
+/* ── الخريطة ── */
+#learnMap{
+ position:fixed; inset:0; z-index:var(--z-learnmap);
+ display:grid; place-items:center; padding:16px;
+ background:color-mix(in srgb,var(--bg) 78%,transparent);
+ direction:rtl;
+}
+#learnMap[hidden]{display:none}
+.lmCard{
+ inline-size:min(560px,100%); max-block-size:calc(100dvh - 32px); overflow:auto;
+ background:var(--bg4); color:var(--fg);
+ border:1px solid var(--ln); border-radius:var(--r4);
+ box-shadow:var(--sh2);
+ padding:28px 28px 20px;
+ animation:lm-in calc(var(--t)*2) var(--ease);
+}
+.lmHead{display:flex; gap:16px; align-items:flex-start; justify-content:space-between; margin-block-end:24px}
+.lmEye{margin:0 0 4px; font-size:.75rem; letter-spacing:.04em; color:var(--brand); font-weight:600}
+.lmHead h2{margin:0; font-size:1.75rem; line-height:1.2; text-wrap:balance}
+.lmSub{margin:8px 0 0; color:var(--fg2); font-size:.875rem; max-inline-size:44ch}
+.lmX{flex:none; inline-size:36px; block-size:36px; border-radius:50%;
+ border:1px solid var(--ln); background:transparent; color:var(--fg2); cursor:pointer}
+.lmX:hover{background:var(--bg3); color:var(--fg)}
+
+/* المسار: خطٌّ رأسيٌّ تتعلّق عليه المحطّات */
+.lmPath{list-style:none; margin:0; padding:0; position:relative}
+.lmPath::before{content:""; position:absolute; inset-block:22px; inset-inline-start:21px;
+ inline-size:2px; background:var(--ln)}
+.lmNode{position:relative}
+.lmNode>button{
+ all:unset; box-sizing:border-box; inline-size:100%;
+ display:grid; grid-template-columns:44px 1fr auto; gap:14px; align-items:center;
+ padding:8px 8px 8px 12px; margin-block:4px; border-radius:var(--r3);
+ cursor:pointer; color:var(--fg);
+ transition:background-color var(--t) var(--ease);
+}
+.lmNode>button:hover{background:var(--bg3)}
+.lmNode>button:focus-visible{outline:2px solid var(--ac); outline-offset:2px}
+.lmNode>button:disabled{cursor:default; color:var(--fg3)}
+.lmNode>button:disabled:hover{background:transparent}
+.lmNum{
+ position:relative; z-index:1; inline-size:44px; block-size:44px; border-radius:50%;
+ display:grid; place-items:center; font-weight:700; font-size:1.125rem;
+ background:var(--bg4); border:2px solid var(--ln); color:var(--fg3);
+}
+.lmNode.open .lmNum{border-color:var(--ac); color:var(--ac); background:var(--acq)}
+.lmNode.done .lmNum{border-color:var(--brand); background:var(--brand); color:var(--bg4)}
+.lmNode.open:first-child .lmNum::after{
+ content:""; position:absolute; inset:-6px; border-radius:50%;
+ border:2px solid var(--ac); opacity:0;
+ animation:lm-ring calc(var(--t)*10) var(--ease) infinite;
+}
+.lmTxt{display:flex; flex-direction:column; gap:2px; min-inline-size:0}
+.lmTxt b{font-size:1rem}
+.lmTxt small{font-size:.8125rem; color:var(--fg3)}
+.lmNode.open .lmTxt b{font-size:1.125rem}
+.lmLock{font-size:.75rem; color:var(--fg3); border:1px dashed var(--ln); border-radius:999px; padding:2px 10px}
+.lmStars{display:inline-flex; gap:3px}
+/* المرحلة ٢: قائمةُ دروس المحطّة تنفتح تحتها على الخطّ نفسِه */
+.lmChev{inline-size:8px; block-size:8px; border-inline-start:2px solid var(--fg3); border-block-end:2px solid var(--fg3);
+ transform:rotate(-45deg); transition:transform var(--t) var(--ease); margin-inline-end:6px}
+.lmNode.exp .lmChev{transform:rotate(135deg)}
+.lmLessons{list-style:none; margin:0 0 8px; padding:0; padding-inline-start:58px;
+ display:flex; flex-direction:column; gap:4px; animation:lm-say calc(var(--t)*2) var(--ease)}
+.lmLessons button{
+ all:unset; box-sizing:border-box; inline-size:100%; cursor:pointer;
+ display:flex; align-items:center; justify-content:space-between; gap:12px;
+ padding:10px 14px; border-radius:var(--r2);
+ background:var(--bg3); border:1px solid var(--ln);
+ transition:border-color var(--t) var(--ease),background-color var(--t) var(--ease);
+}
+.lmLessons button:hover{border-color:var(--ac)}
+.lmLessons button:focus-visible{outline:2px solid var(--ac); outline-offset:2px}
+.lmLessons button>span:first-child{display:flex; flex-direction:column; gap:2px; min-inline-size:0}
+.lmLessons b{font-size:.9375rem}
+.lmLessons small{font-size:.75rem; color:var(--fg3)}
+.lmStars i{inline-size:12px; block-size:12px; background:var(--ln);
+ clip-path:polygon(50% 0,61% 35%,98% 35%,68% 57%,79% 91%,50% 70%,21% 91%,32% 57%,2% 35%,39% 35%)}
+.lmStars i.on{background:var(--brand)}
+.lmFoot{display:flex; justify-content:space-between; gap:12px; flex-wrap:wrap;
+ margin-block-start:20px; padding-block-start:16px; border-block-start:1px solid var(--ln);
+ font-size:.8125rem; color:var(--fg3)}
+.lmFoot b{color:var(--brand)}
+
+/* ── المدرّب ── */
+#learnCoach{
+ position:fixed; z-index:var(--z-learn);
+ inset-block-end:148px; inset-inline:0; margin-inline:auto;
+ inline-size:min(460px,calc(100vw - 24px));
+ direction:rtl; color:var(--fg);
+ background:var(--bg4); border:1px solid var(--ln); border-radius:var(--r3);
+ box-shadow:var(--sh2); padding:12px 16px 14px;
+ animation:lm-up calc(var(--t)*2) var(--ease);
+}
+#learnCoach[hidden]{display:none}
+.lcTop{display:flex; align-items:center; gap:12px}
+.lcTitle{font-size:.8125rem; font-weight:600; color:var(--fg2); white-space:nowrap}
+.lcTitle small{color:var(--fg3); font-weight:400; margin-inline-start:4px}
+.lcDots{display:flex; gap:4px; flex:1; min-inline-size:0}
+.lcDots i{flex:1; max-inline-size:18px; block-size:4px; border-radius:2px; background:var(--ln)}
+.lcDots i.done{background:var(--brand)}
+.lcDots i.on{background:var(--ac)}
+.lcX{all:unset; cursor:pointer; font-size:.75rem; color:var(--fg3); padding:4px 8px; border-radius:var(--r1)}
+.lcX:hover{color:var(--er); background:var(--bg3)}
+.lcX:focus-visible{outline:2px solid var(--ac)}
+.lcSay{margin:10px 0 0; font-size:1.375rem; line-height:1.3; font-weight:700; text-wrap:balance}
+.lcSay.in{animation:lm-say calc(var(--t)*2) var(--ease)}
+.lcHint{margin:6px 0 0; font-size:.875rem; color:var(--fg2)}
+.lcRow{display:flex; align-items:center; justify-content:space-between; gap:12px; margin-block-start:12px}
+.lcRow:has(.lcKeys:empty):not(:has(.lcAuto)){display:none}
+.lcKeys{display:flex; gap:8px; flex-wrap:wrap}
+.lcKey{display:inline-flex; align-items:center; gap:6px; font-size:.75rem; color:var(--fg3)}
+.lcKey kbd{
+ min-inline-size:28px; block-size:28px; padding:0 8px; box-sizing:border-box;
+ display:inline-grid; place-items:center; font:600 .8125rem/1 "IBM Plex Mono",monospace;
+ color:var(--fg); background:var(--bg3); border:1px solid var(--ln);
+ border-block-end-width:3px; border-radius:6px;
+}
+#learnCoach[data-level="1"] .lcKey kbd,#learnCoach[data-level="2"] .lcKey kbd{border-color:var(--acb); color:var(--acf); background:var(--acq)}
+.lcAuto{white-space:nowrap}
+#learnCoach .lcBtns button,#learnCoach .lcAuto{
+ font:inherit; font-size:.875rem; font-weight:600; cursor:pointer;
+ min-block-size:36px; padding:0 16px; border-radius:var(--r2);
+ background:transparent; color:var(--fg); border:1px solid var(--ln2);
+ transition:background-color var(--t) var(--ease),border-color var(--t) var(--ease);
+}
+#learnCoach .lcBtns button:hover,#learnCoach .lcAuto:hover{background:var(--bg3)}
+#learnCoach .lcBtns .pri{background:var(--ac); border-color:var(--ac); color:var(--bg4)}
+#learnCoach .lcBtns .pri:hover{background:var(--acb)}
+#learnCoach .lcAuto{border-color:var(--brandb); color:var(--brandf); background:var(--brandq)}
+#learnCoach button:focus-visible{outline:2px solid var(--ac); outline-offset:2px}
+.lcFin{text-align:center}
+.lcFin .lmStars{gap:6px}
+.lcFin .lmStars i{inline-size:28px; block-size:28px; animation:lm-star calc(var(--t)*3) var(--ease) backwards}
+.lcFin .lmStars i:nth-child(2){animation-delay:calc(var(--t)*1)}
+.lcFin .lmStars i:nth-child(3){animation-delay:calc(var(--t)*2)}
+.lcMeta{margin:6px 0 0; font-size:.8125rem; color:var(--fg3)}
+.lcBtns{display:flex; gap:8px; justify-content:center; flex-wrap:wrap; margin-block-start:14px}
+
+/* ── الإضاءة ── */
+#learnSpot{
+ position:fixed; z-index:var(--z-learn); pointer-events:none;
+ border:2px solid var(--brand); border-radius:var(--r2);
+ transition:transform var(--t) var(--ease),opacity var(--t) var(--ease);
+}
+#learnSpot[hidden]{display:none}
+#learnSpot::after{content:""; position:absolute; inset:-2px; border-radius:inherit;
+ border:2px solid var(--brand); animation:lm-ring calc(var(--t)*8) var(--ease) infinite}
+
+/* ── مؤشّرُ «شاهدني» ── */
+#learnCur{position:fixed; z-index:var(--z-learn); pointer-events:none;
+ inline-size:22px; block-size:22px; margin:-11px 0 0 -11px; border-radius:50%;
+ background:color-mix(in srgb,var(--brand) 35%,transparent); border:2px solid var(--brand);
+ box-shadow:var(--sh2)}
+#learnCur[hidden]{display:none}
+#learnCur.tap::after{content:""; position:absolute; inset:-2px; border-radius:50%;
+ border:2px solid var(--brand); animation:lm-ring calc(var(--t)*3) var(--ease) forwards}
+
+/* ── الشبح ── */
+#learnGhost{position:fixed; z-index:var(--z-chrome); pointer-events:none; overflow:visible}
+#learnGhost[hidden]{display:none}
+#learnGhost .gSeg{stroke:var(--brand); stroke-width:3; stroke-dasharray:8 6; stroke-linecap:round; opacity:.85}
+#learnGhost .gBox{fill:var(--brand); opacity:.12; stroke:var(--brand); stroke-width:1.5; stroke-dasharray:6 5}
+#learnGhost .gDot{fill:var(--brand)}
+#learnGhost .gRing{fill:none; stroke:var(--brand); stroke-width:2;
+ transform-box:fill-box; transform-origin:center; animation:lm-pulse calc(var(--t)*8) var(--ease) infinite}
+
+@keyframes lm-in{from{opacity:0; transform:translateY(12px) scale(.98)}}
+@keyframes lm-up{from{opacity:0; transform:translateY(16px)}}
+@keyframes lm-say{from{opacity:0; transform:translateY(6px)}}
+@keyframes lm-ring{0%{opacity:.7; transform:scale(1)}100%{opacity:0; transform:scale(1.35)}}
+@keyframes lm-pulse{0%{opacity:1; transform:scale(.7)}100%{opacity:0; transform:scale(1.6)}}
+@keyframes lm-star{from{opacity:0; transform:scale(.4) rotate(-30deg)}}
+
+@media (max-width:640px){
+ .lmCard{padding:20px 16px 16px}
+ .lmHead h2{font-size:1.375rem}
+ #learnCoach{inset-block-end:12px}
+ .lcSay{font-size:1.125rem}
+}
+
+/* المرحلة ٣: شارةُ التحدّي */
+.lcCh{font-style:normal; font-size:.6875rem; font-weight:700; color:var(--brandf);
+ background:var(--brandq); border:1px solid var(--brandb); border-radius:999px;
+ padding:1px 8px; margin-inline-end:6px}
+
+/* الجوال: شريطٌ رفيعٌ أعلى الشاشة (js يضع .compact تحت ٦٤٠px) */
+#learnCoach.compact{inline-size:auto; padding:8px 12px; border-radius:var(--r2); animation:none}
+#learnCoach.compact .lcTop{gap:8px}
+#learnCoach.compact .lcTitle{font-size:.75rem}
+#learnCoach.compact .lcSay{margin-block-start:4px; font-size:1rem}
+#learnCoach.compact .lcHint{font-size:.75rem; margin-block-start:2px}
+#learnCoach.compact .lcRow{margin-block-start:6px}
+#learnCoach.compact .lcKey small{display:none}
+#learnCoach.compact .lcKey kbd{block-size:24px; min-inline-size:24px}
+
+/* ═══ المرحلة ٨: الإحصاءات · البحث · البطاقات · الشهادة ═══ */
+.lmStats{display:grid; grid-template-columns:repeat(4,1fr); gap:8px; margin:0 0 16px}
+.lmStats div{background:var(--bg3); border:1px solid var(--ln); border-radius:var(--r2); padding:8px 10px}
+.lmStats dt{font-size:.6875rem; color:var(--fg3)}
+.lmStats dd{margin:2px 0 0; font-size:1.25rem; font-weight:700; color:var(--fg)}
+.lmStats dd small{font-size:.75rem; font-weight:400; color:var(--fg3)}
+.lmSearch{display:block; margin-block-end:12px}
+.lmSearch input{box-sizing:border-box; inline-size:100%; min-block-size:40px; padding:0 14px;
+ font:inherit; color:var(--fg); background:var(--bg3); border:1px solid var(--ln); border-radius:var(--r2)}
+.lmSearch input:focus-visible{outline:2px solid var(--ac); outline-offset:1px; border-color:var(--ac)}
+.sr{position:absolute; inline-size:1px; block-size:1px; overflow:hidden; clip-path:inset(50%); white-space:nowrap}
+.lmRes:empty{display:none}
+.lmLessons.flat{padding-inline-start:0; margin-block-end:12px}
+.lmNone{margin:8px 0 16px; color:var(--fg3); font-size:.875rem}
+.lmPath[hidden]{display:none}
+.lmNode.cards .lmNum{border-color:var(--brandb); color:var(--brand); background:var(--brandq)}
+.lmTag{font-style:normal; font-size:.625rem; font-weight:600; color:var(--fg3);
+ border:1px solid var(--ln2); border-radius:999px; padding:0 6px; margin-inline-start:4px; vertical-align:middle}
+.lmTag.cap{color:var(--brandf); background:var(--brandq); border-color:var(--brandb)}
+.lmOk{color:var(--ok); font-weight:700}
+.lmFoot{align-items:center}
+.lmCertBtn{font:inherit; font-size:.8125rem; font-weight:600; cursor:pointer; min-block-size:32px; padding:0 14px;
+ border-radius:var(--r2); color:var(--brandf); background:var(--brandq); border:1px solid var(--brandb)}
+.lmCertBtn:disabled{cursor:default; color:var(--fg3); background:transparent; border-color:var(--ln)}
+.lmCertBtn:focus-visible{outline:2px solid var(--ac); outline-offset:2px}
+.lmCert{margin-block-start:16px; padding:16px; border:1px solid var(--brandb); border-radius:var(--r3); background:var(--bg3)}
+.lmCert[hidden]{display:none}
+.lmName{display:flex; flex-direction:column; gap:6px; font-size:.8125rem; color:var(--fg2)}
+.lmName input{font:inherit; font-size:1rem; min-block-size:40px; padding:0 12px; color:var(--fg);
+ background:var(--bg4); border:1px solid var(--ln2); border-radius:var(--r2)}
+.lmCert .lcBtns button{font:inherit; font-weight:600; cursor:pointer; min-block-size:36px; padding:0 16px;
+ border-radius:var(--r2); background:var(--ac); color:var(--bg4); border:1px solid var(--ac)}
+.lmCertOut img{display:block; inline-size:100%; margin-block-start:14px; border-radius:var(--r1); box-shadow:var(--sh2)}
+.lmDl{display:inline-block; margin-block-start:10px; color:var(--ac); font-weight:600}
+@media (max-width:640px){.lmStats{grid-template-columns:repeat(2,1fr)}}
