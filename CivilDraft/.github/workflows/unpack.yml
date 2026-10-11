@@ -1,0 +1,27 @@
+name: Unpack project zip
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  unpack:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: فك الضغط ونقل الملفات إلى جذر المستودع
+        run: |
+          set -e
+          test -f CivilDraft-final.zip || { echo "::error::ارفع CivilDraft-final.zip إلى جذر المستودع أولاً"; exit 1; }
+          mkdir /tmp/x
+          unzip -q CivilDraft-final.zip -x "CivilDraft/.github/*" -d /tmp/x
+          rsync -a /tmp/x/CivilDraft/ ./
+          rm -f CivilDraft-final.zip
+          git config user.name "github-actions"
+          git config user.email "actions@github.com"
+          git add -A
+          git commit -m "CivilDraft 1.1.0"
+          git push
