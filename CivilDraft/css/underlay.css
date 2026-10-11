@@ -1,0 +1,18 @@
+/* ═══ لوح الصورة المرجعية (js/ui/underlayPanel.js) — بلا style مضمَّن ═══
+   يُثبَّت عند طرف الشاشة لا في وسطها: التعديل الحيّ (شفافية، دوران،
+   مقياس) يحتاج أن ترى الصورة وهي تتغيّر خلفه. */
+.rpt.ul{inset-inline:auto; inset-inline-end:12px; inset-block-start:auto;
+ inset-block-end:56px; margin:0; width:min(330px,94vw); max-height:60vh}
+.ul-row{display:flex; align-items:center; gap:10px; flex-wrap:wrap;
+ margin:6px 0}
+.ul-row input[type=range]{flex:1 1 120px; min-width:80px}
+.ul-row output{min-width:3.2em; text-align:end; color:var(--fg2)}
+.ul-grid{display:grid; grid-template-columns:1fr 1fr; gap:8px; margin:8px 0}
+.ul-grid label{display:flex; flex-direction:column; gap:3px; margin:0;
+ color:var(--fg2)}
+.ul-grid input{width:100%; box-sizing:border-box}
+.rpt.ul .rpt-act button:disabled{opacity:.4; cursor:default}
+@media (max-width:640px){
+ .rpt.ul{inset-inline-end:0; inset-block-end:0; width:100vw;
+  border-radius:var(--r2) var(--r2) 0 0}
+}
