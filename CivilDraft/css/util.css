@@ -1,0 +1,74 @@
+/* ═══ أصنافٌ مساعدة مولَّدة ═══
+   حلّت محلّ style="…" المضمَّنة في قوالب الواجهة حتى تُغلَق CSP بلا
+   'unsafe-inline'. كلُّ تصريحٍ !important ليحفظ أسبقيةَ النمط المضمَّن
+   على قواعد الأصناف (وإلّا غلبه `.ro` أو `.f button` بالتخصيص).
+   اسمُ الصنف = crc32 لنصّ التصريحات، فالتصريحُ الواحد صنفٌ واحد. */
+
+/* ═══ دفعة 3.2 — نمطان مرجعيان للأنماط الديناميكية ═══
+   المشروع نظيفٌ من الأنماط المضمّنة المحظورة بـCSP: لا style= في
+   HTML، ولا style.cssText، ولا setAttribute("style")، ولا <style>
+   من JS. كل الأنماط الديناميكية تمرّ عبر CSSOM property setters
+   (مسموحةٌ صراحةً: تعيينُ خاصّية DOM لا سلسلة نصّية تُحلَّل كـHTML).
+
+   ونمطان مرجعيان يُستعملان عند الحاجة إلى قيمةٍ من البيانات:
+
+   ١. نمط data-bg — لونٌ من البيانات (لا style="background:..."):
+      القالب يكتب data-bg="#rrggbb"، ثم paintBg() في props.js
+      يقرأ السمة ويطبّقها عبر CSSOM:
+        el.style.background = el.getAttribute("data-bg")
+      مثال: props.js:renderLays (لون الطبقة) + paintBg.
+
+   ٢. نمط setProperty — قيمةٌ متغيّرة إلى متغيّر CSS:
+      عند تمرير قيمةٍ متغيّرة (شفافية، عرض) إلى قاعدة CSS،
+      تُستعمل el.style.setProperty("--var", value) لا style="".
+      مثال: cmdline.js:applyCmd → w.style.setProperty("--cmdOpa", ...).
+
+   أما القيم المتغيّرة لحظياً (transform، inset، مواضع القوائم،
+   مقاس القماش، المؤشّر) فتُكتَب مباشرةً كخصائص مفردة:
+     el.style.transform = ...، el.style.insetInlineStart = ...،
+     cv.style.width = ...، cv.style.cursor = ...
+   وهي مسموحةٌ بـCSP للسبب نفسه.
+
+   ═══ استثناءٌ مقصود: صندوق عطب الإقلاع ═══
+   bootguard.js يكتب أنماط صندوق العطب عبر Object.assign(b.style,{...})
+   لا عبر أصناف CSS. السبب: الصندوق يُظهر أخطاء تحميل CSS نفسها،
+   فلو اعتمد على CSS لظهر بلا تنسيق في الحالة التي وُجِد لأجلها.
+   وهذا CSSOM مسموحٌ بـCSP، فلا حاجة لتغييره. */
+
+.u-018d5{color:var(--ok) !important}
+.u-03732{flex:1 !important}
+.u-12ee1{width:100% !important}
+.u-13306{margin:var(--s-6) 0 !important}
+.u-16066{margin:var(--s-4) 0 !important}
+.u-1ef16{margin:var(--s-px) 0 !important}
+.u-22dea{margin:var(--s-px) 0 !important;color:var(--er) !important}
+.u-2af14{color:var(--er) !important;margin:var(--s-px) 0 !important}
+.u-46081{white-space:pre-wrap !important;margin:var(--s-5) 0 !important}
+.u-4da04{margin:var(--s-px) 0 !important;color:var(--fg3) !important}
+.u-4dd61{display:flex !important;align-items:flex-end !important}
+.u-54305{color:var(--wr) !important}
+.u-78d84{font-size:10px !important;display:inline !important}
+.u-7f452{flex:none !important;width:32px !important}
+.u-98995{flex:1 !important;overflow:hidden !important;text-overflow:ellipsis !important;white-space:nowrap !important}
+.u-c1d97{color:var(--fg3) !important}
+.u-dd1c5{margin:var(--s-px) 0 !important;text-align:start !important;cursor:pointer !important}
+.u-e6b0c{display:flex !important;gap:var(--s-6) !important;margin-top:var(--s-5) !important;color:var(--ok) !important}
+.u-f9ed8{margin-top:var(--s-8) !important}
+.u-fac15{color:var(--fg3) !important;margin:var(--s-10) 0 0 !important;font-size:11.5px !important}
+.u-fe2da{display:flex !important;gap:var(--s-4) !important;align-items:flex-end !important}
+
+.xall{display:flex;gap:var(--s-6);align-items:center;margin:var(--s-6) 0}
+.xall-opts{margin:var(--s-4) 0 var(--s-6) 18px;gap:var(--s-8)}
+.xall-opts:not([hidden]){display:flex}
+
+/* ═══ لقارئ الشاشة وحده ═══ P5-005
+   يبقى في شجرة إتاحة الوصول ويخرج من التخطيط البصريّ تماماً.
+   لا display:none ولا visibility:hidden — كلاهما يُخرجه من الشجرة
+   فلا يُقرَأ. ولا width:0 وحده — بعض القرّاء يتجاهله. */
+.u-sr{
+ position:absolute !important;
+ inline-size:1px; block-size:1px;
+ margin:-var(--s-px); padding:0; border:0;
+ overflow:hidden; clip-path:inset(50%);
+ white-space:nowrap;
+}
