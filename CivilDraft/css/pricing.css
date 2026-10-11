@@ -1,0 +1,13 @@
+/* ═══ شاشة التسعير (js/ui/pricingPanel.js) — بلا style مضمَّن ═══ */
+.rpt.pr{width:min(640px,96vw); max-height:84vh}
+.pr-cfg{display:flex; flex-wrap:wrap; gap:12px; margin-bottom:8px}
+.pr-cfg label{display:flex; flex-direction:column; gap:3px; margin:0;
+ color:var(--fg2)}
+.pr-cfg input{width:9em; box-sizing:border-box}
+.rpt.pr .rpt-tbl input[data-f=rate]{width:7em; box-sizing:border-box}
+.rpt.pr [data-o=warn]{color:var(--wr); white-space:nowrap}
+.pr-tot{margin:8px 0; padding-block-start:6px; border-top:1px solid var(--ln)}
+@media (max-width:640px){
+ .rpt.pr{inset-block-start:0; width:100vw; max-height:100dvh;
+  border-radius:0}
+}
