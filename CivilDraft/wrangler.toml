@@ -1,0 +1,9 @@
+# ═══ Cloudflare Pages ═══
+# يُقرأ بواسطة: npx wrangler pages deploy / pages dev  (انظر docs/CLOUDFLARE.md)
+# المجلّد المنشور هو dist/ نفسه الذي ينشره netlify.toml — يبنيه
+# scripts/build-dist.js بقائمةٍ صريحة، فلا يُنشَر السويتُ ولا audit/.
+# الترويسات (CSP · HSTS · Cache-Control) تأتي من dist/_headers
+# وCloudflare Pages يقرؤه بنفس الصيغة — لا تُكرَّر هنا.
+name = "civildraft"
+pages_build_output_dir = "./dist"
+compatibility_date = "2026-10-01"
