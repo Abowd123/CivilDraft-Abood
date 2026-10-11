@@ -1,0 +1,467 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8">
+<!-- ═══ CSP ═══
+     نصّ المزوّد يمرّ إلى الواجهة (prose وnotes ورسائل الخطأ التي
+     تحمل ١٨٠ حرفاً من جسم ردّه)، والمفتاح مخزَّنٌ في نفس الأصل.
+     سطحُ الحقن مغلقٌ في الشفرة، وهذه طبقةٌ ثانية بلا تكلفة:
+     لا سكربت مضمَّن في المشروع كلّه.
+     style-src بلا 'unsafe-inline': لا سمةَ style ولا عنصرَ <style>
+     في الصفحة ولا في قوالب الواجهة (تُحمَل الأنماط من css/*.css؛ واللونُ
+     الآتي من البيانات يُطبَّق عبر CSSOM بعد الإدراج، وهو مسموح) ·
+     ═══ connect-src مضيّقٌ إلى المضيفين الفعليين ═══ P6-004
+     كان 'https:' يسمح بكلِّ مضيفٍ مشفَّرٍ في الدنيا. وبقرارِ المالك
+     (2026-10-02) **المزوّدُ المخصّصُ غير مدعوم**، فالقائمةُ هنا هي
+     المضيفونَ الأربعةُ الفعليّون في js/ai/net.js ومنفذا الخدمةِ
+     المحلّيّة وحدهم — لا أكثر. وإن أُعيد دعمُ المزوّد المخصّص يوماً
+     فلا تستطيع CSP ثابتةٌ السماحَ بعنوانٍ يكتبه المستخدم: يلزم
+     وسيطٌ (proxy) أو قائمةُ سماحٍ، أو قبولُ 'https:' بقرارٍ صريح.
+     القديمُ للمراجعة: connect-src مضيّقٌ إلى https وlocalhost لأن عنوان
+     المزوّد يختاره المستخدم لكن لا داعي لقبول أي مخطّط أو مضيفٍ
+     بعيد غير مشفّر · data: blob: لأن PNG يُدرَج صورةً في PDF
+     ويُنزَّل بـblob.
+     ═══ D0-02/D0-03/D0-08 — frame-ancestors هنا زائدةٌ عملياً ═══
+     المتصفّحات تتجاهل frame-ancestors داخل <meta> (توجيهٌ يُقبَل من
+     رأس HTTP فقط، لا من عنصر meta — قيد المواصفة لا عطلٌ هنا).
+     الحمايةُ الفعليةُ من رأس Content-Security-Policy في _headers
+     وnetlify.toml وserving/static-server.js، والثلاثةُ تحمل
+     frame-ancestors 'none' فعلاً. أبقيتُ التوجيه هنا موثّقاً لا
+     فعّالاً (توافقاً مع csp.test.js وphase3.3.test.js اللذين
+     يشترطانه في نصّ الـmeta) بدل حذفه وتعديل الاختبارين معاً. -->
+<meta http-equiv="Content-Security-Policy" content="
+ default-src 'self';
+ script-src 'self';
+ style-src 'self';
+ img-src 'self' data: blob:;
+ connect-src 'self' http://localhost:11434 http://localhost:8080 http://127.0.0.1:11434 http://127.0.0.1:8080 https://api.openai.com https://api.groq.com https://generativelanguage.googleapis.com https://openrouter.ai;
+ object-src 'none';
+ base-uri 'none';
+ form-action 'none';
+ frame-ancestors 'none'">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>CivilDraft — مخططات معمارية</title>
+<link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#0f172a">
+<!-- ═══ بياناتُ الصفحة ═══ P6-008
+     الوصفُ وOpen Graph وTwitter card وcanonical كانت غائبةً كلُّها.
+     والنطاقُ غيرُ معروفٍ بعد، فcanonical نسبيٌّ («./») — صالحٌ على أيّ
+     نطاقٍ ولا يكذب. og:url وog:image يحتاجان عنواناً مطلقاً بالمواصفة،
+     فتُركا نسبيَّين عن قصدٍ (معظمُ القارئات تحلّها) ويُضبَطان مطلقَين
+     عند تثبيت النطاق — وهذا هو القرارُ الوحيدُ المتبقّي هنا. -->
+<meta name="description" content="CivilDraft — مرسمةُ مخطّطاتٍ معماريةٍ عربيةٌ تعمل في المتصفّح بلا اعتماديات ولا تثبيت: جدرانٌ وفتحاتٌ وأبعادٌ وطبقاتٌ وجدولُ كميّات، وتصديرُ DXF وPDF وSVG.">
+<link rel="canonical" href="./">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="CivilDraft">
+<meta property="og:locale" content="ar_AR">
+<meta property="og:title" content="CivilDraft — مرسمة مخطّطات معمارية في المتصفّح">
+<meta property="og:description" content="ارسم مخطّطاً معمارياً كاملاً في متصفّحك: جدرانٌ وفتحاتٌ وأبعادٌ وجدولُ كميّات، وتصديرُ DXF وPDF. بلا تثبيتٍ وبلا حساب.">
+<meta property="og:url" content="./">
+<meta property="og:image" content="icons/icon-512.png">
+<meta property="og:image:width" content="512">
+<meta property="og:image:height" content="512">
+<meta property="og:image:alt" content="شعار CivilDraft">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="CivilDraft — مرسمة مخطّطات معمارية في المتصفّح">
+<meta name="twitter:description" content="مخطّطاتٌ معماريةٌ كاملةٌ في المتصفّح: جدرانٌ وأبعادٌ وجدولُ كميّات وتصديرُ DXF وPDF. بلا تثبيت.">
+<meta name="twitter:image" content="icons/icon-512.png">
+<!-- ═══ الأيقونات — مسارات نسبية كبقية الملفات، وكلّها من نفس الأصل
+     فيكفيها img-src 'self' القائم دون أي تعديل على الـCSP.
+     ICO احتياطٌ للمتصفحات القديمة (sizes="32x32" كي لا يفضّله Chrome
+     على الـSVG) · SVG للحديثة · apple-touch-icon لشاشة iOS الرئيسية
+     (180×180 بلا شفافية). ═══ -->
+<link rel="icon" href="favicon.ico" sizes="32x32">
+<link rel="icon" href="favicon.svg" type="image/svg+xml">
+<link rel="icon" href="icons/icon-192.png" sizes="192x192" type="image/png">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<link rel="stylesheet" href="css/boot.css">
+<!-- جدولُ الرموز قبل كلِّ شيء: السلّمُ والكثافةُ يُقرآن في كلِّ
+     ملفٍّ بعده — المرحلة ٣ من audit/10-ui-plan.md -->
+<link rel="stylesheet" href="css/tokens.css">
+<link rel="stylesheet" href="css/theme.css">
+<link rel="stylesheet" href="css/base.css">
+<link rel="stylesheet" href="css/ribbon.css">
+<link rel="stylesheet" href="css/dock.css">
+<link rel="stylesheet" href="css/status.css">
+<link rel="stylesheet" href="css/cmd.css">
+<link rel="stylesheet" href="css/tools.css">
+<link rel="stylesheet" href="css/panels.css">
+<link rel="stylesheet" href="css/palette.css">
+<link rel="stylesheet" href="css/history.css">
+<link rel="stylesheet" href="css/blocks.css">
+<link rel="stylesheet" href="css/helpbot.css">
+<link rel="stylesheet" href="css/tour.css">
+<link rel="stylesheet" href="css/studio.css">
+<link rel="stylesheet" href="css/util.css">
+<link rel="stylesheet" href="css/welcome.css">
+<link rel="stylesheet" href="css/learn.css">
+<link rel="stylesheet" href="css/guide.css">
+<link rel="stylesheet" href="css/report.css">
+<link rel="stylesheet" href="css/view3d.css">
+<link rel="stylesheet" href="css/underlay.css">
+<link rel="stylesheet" href="css/pricing.css">
+<link rel="stylesheet" href="css/about.css">
+<link rel="stylesheet" href="css/modern.css">
+<link rel="stylesheet" href="css/touch.css">
+<!-- ═══ D12-EP2/EP3: ترتيب تحميل صريح ═══
+     theme رموزٌ (tokens) → base أساسٌ وعامّ → المكوّنات
+     (ribbon..util) → modern تحسيناتٌ شفافة بلا متغيّر
+     → touch آخراً عمداً (طبقة اللمس/التجاوب لا تمسّ الديسكتوب).
+     cmdpal.css حُذف مع cmdpalette.js في D12-EP3: لم يبقَ سوى
+     لوحة أوامرٍ واحدة (palette.css). الأولوية الأفقية بين قواعد
+     متعارضة تُحسَم هنا بالترتيب لا باسم الملف. من يعدّل تعارضاً
+     فليُراجع هذه القائمة. ═══ -->
+</head>
+<body>
+
+<div id="splash" role="status" aria-live="polite" aria-label="CivilDraft — جارٍ التحميل">
+ <img class="splash-mark" src="favicon.svg" alt="" width="76" height="76">
+ <div class="splash-name"><b>Civil</b>Draft</div>
+ <div class="splash-tag">مخططات معمارية · جارٍ التحميل…</div>
+ <div class="splash-bar"><i></i></div>
+ <svg class="splash-frame" viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true"><rect pathLength="1" x="0" y="0" width="100" height="100"/><rect pathLength="1" x="1.2" y="1.8" width="97.6" height="96.4"/></svg>
+ <div class="splash-org"><img src="icons/college-logo.svg" alt="" width="24" height="24"><span>كلية الهندسة · قسم الهندسة المدنية</span></div>
+</div>
+<script type="module" src="js/boot-splash.js"></script>
+
+<header id="top">
+ <button id="appBtn" aria-haspopup="menu" aria-expanded="false"
+  title="قائمة CivilDraft · Alt ثم ٠">CivilDraft
+  <span class="kt" hidden>٠</span></button>
+ <span id="qat" role="toolbar" aria-label="وصول سريع"></span>
+ <span class="dv"></span>
+ <!-- ═══ البحثُ ظاهرٌ دائماً ═══ المرحلة ١ من audit/10-ui-plan.md
+      لوحةُ الأوامرِ كانت تحلُّ ١٥٠ أداةً و٣٤٦ لقباً **وبلا زرّ**:
+      تُفتَح باختصارٍ يعرفه من قرأ الوثائق. ومع هذا العددِ البحثُ
+      أسرعُ من أيِّ تصنيف، فيصير مُواطناً من الدرجةِ الأولى لا
+      اختصاراً مخفيّاً. وهو زرٌّ لا حقلُ إدخالٍ حقيقيٌّ: اللوحةُ
+      تملك حقلَها، وحقلانِ يتنافسان على التركيز يسرق أحدهما
+      الكتابةَ من سطر الأوامر. -->
+ <button id="srchBtn" title="ابحث عن أداةٍ أو أمر · Ctrl+K"
+  aria-label="ابحث عن أداةٍ أو أمر">
+  <span class="si" aria-hidden="true">⌕</span>
+  <span class="sl">ابحث عن أداة…</span>
+  <span class="sk" aria-hidden="true">Ctrl+K</span>
+ </button>
+ <!-- «مؤخّراً»: يتعلّم من الاستعمالِ ولا يُعلَن فارغاً -->
+ <span id="recent" role="toolbar" aria-label="أدوات استعملتها مؤخّراً"
+  hidden></span>
+ <span class="dv"></span>
+ <span class="ver">مليمتر · لا يتحرّك شيء إلا بأمرك</span>
+ <span class="gap"></span>
+ <span class="tip">Alt دلائل · Esc يلغي · F1 مساعدة · F7 فحص</span>
+</header>
+
+<div id="appMenu" hidden></div>
+ <div id="palette" hidden></div>
+<div id="ribbon" hidden></div>
+<nav id="tools"></nav>
+
+<div id="main">
+ <div class="strip" id="stripS" data-zone="s" hidden></div>
+ <aside id="side" class="dock" data-zone="s"></aside>
+ <button class="dockClose" data-dockclose="s" hidden
+  title="إغلاق اللوحة" aria-label="إغلاق لوحة الخصائص">✕</button>
+ <div class="dsz" data-rsz="s" role="separator" tabindex="0"
+  aria-orientation="vertical" aria-label="عرض العمود الأيمن"
+  aria-valuemin="210" aria-valuemax="560" aria-valuenow="312"
+  title="اسحب أو استعمل الأسهم"></div>
+ <section id="work">
+  <div id="stage" dir="ltr"><canvas id="cv" tabindex="0"
+    role="img" aria-label="لوحة الرسم — استعمل سطر الإدخال للأوامر"
+    aria-describedby="cvAlt"
+    >لوحة رسمٍ نقطية. الأوامر كلّها متاحة من سطر الإدخال
+    وقوائم الشريط.</canvas>
+   <!-- ═══ البديلُ البنيويُّ للقماش ═══ P5-005
+        كان للقماش اسمٌ عامٌّ ونصُّ احتياطٍ ثابت، فلا يسمع قارئُ
+        الشاشة شيئاً عن المحتوى: لا عددَ كياناتٍ ولا طبقةً نشطة.
+        هذا عنصرٌ حيٌّ مرتبطٌ بـaria-describedby يُحدَّث من
+        canvas.js عند كل رسم. مرئيٌّ لقارئ الشاشة وحده
+        (الصنف u-sr في css/util.css) فلا يغيّر التخطيط. -->
+   <div id="cvAlt" class="u-sr" role="status" aria-live="polite"
+     aria-atomic="true">لوحةٌ فارغة</div>
+   <div id="optbar" dir="rtl"></div>
+   <div id="vpLabel"></div>
+   <div id="navbar" role="toolbar" aria-label="تنقّل"></div>
+   <button id="fabDock" hidden title="الخصائص · اللوحات"
+    aria-label="افتح اللوحات" data-peek="props" data-zone="s">☰</button>
+   <!-- ═══ شريطُ الإبهام ═══ المرحلة ٧ من audit/10-ui-plan.md
+        بحثٌ + ستُّ أدواتٍ **أسفلَ الشاشة**، على الهاتفِ وحده: البحثُ
+        و«مؤخّراً» كانا في الترويسةِ أعلى الشاشةِ — أبعدُ موضعٍ عن
+        إبهامِ من يُمسِك الهاتفَ بيدٍ واحدة. ويُخفى على الحواسيبِ
+        بالتنسيقِ (لا بـhidden) فلا يُكرَّر سطحٌ بصرياً. -->
+   <div id="thumb" role="toolbar" aria-label="أدوات سريعة وبحث"></div>
+   <div id="compass"></div>
+   <div id="dynBox" hidden></div>
+   <div id="qpCard" hidden dir="rtl">
+    <div class="qpH"><span id="qpHead"></span>
+     <button type="button" data-act="propsDlg"
+      title="افتح لوحة الخصائص" aria-label="افتح لوحة الخصائص"
+      >⤢</button>
+     <button type="button" id="qpClose" title="إخفاء"
+      aria-label="إخفاء الخصائص السريعة">✕</button></div>
+    <div id="qpBody"></div>
+   </div>
+  </div>
+  <div id="cmdWrap">
+   <div id="cmdline">
+    <span id="clPrompt">أداة:</span>
+    <input id="clIn" type="text" spellcheck="false" autocomplete="off"
+     aria-labelledby="clPrompt"
+     placeholder="اكتب مقاس زي 3×4 · @5,0 · @5<45 · 5 · أو ؟ للسؤال">
+    <span id="clLive"></span>
+    <div id="clSug" hidden></div>
+   </div>
+   <div id="clKeys" hidden aria-label="ما يقبله سطر الأوامر الآن"></div>
+   <div id="log" role="log" aria-live="polite" aria-atomic="false"
+    aria-label="سجل الرسائل"><div class="ln wr" id="bootMsg"
+    >يُحمَّل CivilDraft… إن بقي هذا السطر فالوحدات لم تُحمَّل.
+    افتح وحدة التحكّم لترى الملفّ المفقود.</div></div>
+  </div>
+   <div id="tour" hidden></div>
+ </section>
+ <div class="dsz" data-rsz="e" role="separator" tabindex="0"
+  aria-orientation="vertical" aria-label="عرض العمود الأيسر"
+  aria-valuemin="210" aria-valuemax="560" aria-valuenow="270"
+  title="اسحب أو استعمل الأسهم" hidden></div>
+ <aside id="sideE" class="dock" data-zone="e" hidden></aside>
+ <button class="dockClose" data-dockclose="e" hidden
+  title="إغلاق اللوحة" aria-label="إغلاق لوحة الخصائص">✕</button>
+ <div class="strip" id="stripE" data-zone="e" hidden></div>
+</div>
+
+<div id="pPark" hidden></div>
+<div id="floats"></div>
+<div id="pMenu" hidden role="menu"></div>
+<div id="wsMenu" hidden role="menu"></div>
+
+<footer id="status">
+ <div id="stItems"></div>
+ <div id="osPop" hidden></div>
+</footer>
+
+<div id="stMenu" hidden role="menu"></div>
+<div id="vMenu" hidden role="menu"></div>
+<div id="cmdFloat"></div>
+<div id="cMenu" hidden role="menu"></div>
+<div id="ctxMenu" hidden role="menu"></div>
+
+<div id="helpBox" hidden role="dialog" aria-modal="true"
+ aria-label="مساعدة CivilDraft"></div>
+
+<noscript>
+ <div dir="rtl" class="ns-box">
+  <b>CivilDraft يحتاج جافاسكربت.</b> الواجهة كلّها تُبنى في المتصفّح،
+  ولا خادمَ يرسمها. شغّل جافاسكربت ثم أعِد التحميل.
+  <br>وإن كنت تفتح الملفّ من القرص مباشرةً (<code>file://</code>)
+  فوحدات ES لا تُحمَّل منه — شغّله بخادمٍ محلّي:
+  <code class="ns-cmd">npm run serve</code>
+ </div>
+</noscript>
+
+<!-- PRELOAD:begin (serving/gen-preload.js) -->
+<link rel="modulepreload" href="js/bootguard.js">
+<link rel="modulepreload" href="js/core/escape.js">
+<link rel="modulepreload" href="js/ui/bus.js">
+<link rel="modulepreload" href="js/ui/install.js">
+<link rel="modulepreload" href="js/core/limits.js">
+<link rel="modulepreload" href="js/core/units.js">
+<link rel="modulepreload" href="js/io/store.js">
+<link rel="modulepreload" href="js/core/laydef.js">
+<link rel="modulepreload" href="js/core/tabledef.js">
+<link rel="modulepreload" href="js/core/coords.js">
+<link rel="modulepreload" href="js/core/geom.js">
+<link rel="modulepreload" href="js/core/shape.js">
+<link rel="modulepreload" href="js/core/ltypes.js">
+<link rel="modulepreload" href="js/core/parse.js">
+<link rel="modulepreload" href="js/core/validate.js">
+<link rel="modulepreload" href="js/core/arcmath.js">
+<link rel="modulepreload" href="js/core/level.js">
+<link rel="modulepreload" href="js/core/walls.js">
+<link rel="modulepreload" href="js/core/opens.js">
+<link rel="modulepreload" href="js/core/hatches.js">
+<link rel="modulepreload" href="js/core/perf.js">
+<link rel="modulepreload" href="js/core/areas.js">
+<link rel="modulepreload" href="js/core/dimstyles.js">
+<link rel="modulepreload" href="js/core/dims.js">
+<link rel="modulepreload" href="js/core/cols.js">
+<link rel="modulepreload" href="js/core/roof.js">
+<link rel="modulepreload" href="js/core/plines.js">
+<link rel="modulepreload" href="js/core/clouds.js">
+<link rel="modulepreload" href="js/core/fixt.js">
+<link rel="modulepreload" href="js/core/blocks.js">
+<link rel="modulepreload" href="js/core/tables.js">
+<link rel="modulepreload" href="js/core/stairs.js">
+<link rel="modulepreload" href="js/core/live.js">
+<link rel="modulepreload" href="js/core/struct.js">
+<link rel="modulepreload" href="js/core/entreg.js">
+<link rel="modulepreload" href="js/core/layers.js">
+<link rel="modulepreload" href="js/core/state.js">
+<link rel="modulepreload" href="js/core/delegate.js">
+<link rel="modulepreload" href="js/core/sindex.js">
+<link rel="modulepreload" href="js/core/ents.js">
+<link rel="modulepreload" href="js/core/journal.js">
+<link rel="modulepreload" href="js/tools/registry.js">
+<link rel="modulepreload" href="js/tools/draw.js">
+<link rel="modulepreload" href="js/core/trace.js">
+<link rel="modulepreload" href="js/tools/sketch.js">
+<link rel="modulepreload" href="js/tools/openings.js">
+<link rel="modulepreload" href="js/tools/parts.js">
+<link rel="modulepreload" href="js/tools/roof.js">
+<link rel="modulepreload" href="js/core/callouts.js">
+<link rel="modulepreload" href="js/core/ref.js">
+<link rel="modulepreload" href="js/core/sheet.js">
+<link rel="modulepreload" href="js/core/render.js">
+<link rel="modulepreload" href="js/tools/areas.js">
+<link rel="modulepreload" href="js/core/batch.js">
+<link rel="modulepreload" href="js/core/groups.js">
+<link rel="modulepreload" href="js/core/modify.js">
+<link rel="modulepreload" href="js/tools/blockops.js">
+<link rel="modulepreload" href="js/tools/modify.js">
+<link rel="modulepreload" href="js/core/autodim.js">
+<link rel="modulepreload" href="js/tools/annotate.js">
+<link rel="modulepreload" href="js/tools/ref.js">
+<link rel="modulepreload" href="js/core/boq.js">
+<link rel="modulepreload" href="js/io/boq.js">
+<link rel="modulepreload" href="js/core/pricing.js">
+<link rel="modulepreload" href="js/io/project.js">
+<link rel="modulepreload" href="js/io/boqcsv.js">
+<link rel="modulepreload" href="js/tools/boq.js">
+<link rel="modulepreload" href="js/io/boqreport.js">
+<link rel="modulepreload" href="js/io/style.js">
+<link rel="modulepreload" href="js/io/pdf.js">
+<link rel="modulepreload" href="js/io/boqpdf.js">
+<link rel="modulepreload" href="js/tools/boqreport.js">
+<link rel="modulepreload" href="js/core/elevation.js">
+<link rel="modulepreload" href="js/io/svg.js">
+<link rel="modulepreload" href="js/io/cp1256.js">
+<link rel="modulepreload" href="js/io/dxfarc.js">
+<link rel="modulepreload" href="js/io/dxf.js">
+<link rel="modulepreload" href="js/io/elev.js">
+<link rel="modulepreload" href="js/tools/elev.js">
+<link rel="modulepreload" href="js/core/section.js">
+<link rel="modulepreload" href="js/io/sect.js">
+<link rel="modulepreload" href="js/tools/section.js">
+<link rel="modulepreload" href="js/tools/sheet.js">
+<link rel="modulepreload" href="js/tools/clouds.js">
+<link rel="modulepreload" href="js/tools/groups.js">
+<link rel="modulepreload" href="js/core/macros.js">
+<link rel="modulepreload" href="js/ai/plan.js">
+<link rel="modulepreload" href="js/ai/run.js">
+<link rel="modulepreload" href="js/ai/macrorun.js">
+<link rel="modulepreload" href="js/tools/macros.js">
+<link rel="modulepreload" href="js/core/templates.js">
+<link rel="modulepreload" href="js/tools/levelmgr.js">
+<link rel="modulepreload" href="js/tools/tplscript.js">
+<link rel="modulepreload" href="js/tools/showcase.js">
+<link rel="modulepreload" href="js/ui/cmdkeys.js">
+<link rel="modulepreload" href="js/tools/cleanup.js">
+<link rel="modulepreload" href="js/tools/dedup.js">
+<link rel="modulepreload" href="js/ui/focustrap.js">
+<link rel="modulepreload" href="js/ui/rpt.js">
+<link rel="modulepreload" href="js/ui/hygiene.js">
+<link rel="modulepreload" href="js/io/png.js">
+<link rel="modulepreload" href="js/io/zip.js">
+<link rel="modulepreload" href="js/io/export.js">
+<link rel="modulepreload" href="js/core/levelAlign.js">
+<link rel="modulepreload" href="js/ui/layout.js">
+<link rel="modulepreload" href="js/ui/store.js">
+<link rel="modulepreload" href="js/ui/icons.js">
+<link rel="modulepreload" href="js/ui/panels.js">
+<link rel="modulepreload" href="js/ui/dock.js">
+<link rel="modulepreload" href="js/ui/actions.js">
+<link rel="modulepreload" href="js/ui/gate.js">
+<link rel="modulepreload" href="js/ui/levelManager.js">
+<link rel="modulepreload" href="js/ui/styleManager.js">
+<link rel="modulepreload" href="js/core/underlay.js">
+<link rel="modulepreload" href="js/ui/ribbon/schema.js">
+<link rel="modulepreload" href="js/ui/ribbon/custom.js">
+<link rel="modulepreload" href="js/ui/ribbon/beginner.js">
+<link rel="modulepreload" href="js/ui/ribbon/overflow.js">
+<link rel="modulepreload" href="js/ui/ribbon/render.js">
+<link rel="modulepreload" href="js/core/osnap.js">
+<link rel="modulepreload" href="js/core/compare.js">
+<link rel="modulepreload" href="js/ui/theme.js">
+<link rel="modulepreload" href="js/tools/blocks.js">
+<link rel="modulepreload" href="js/ui/blockdraw.js">
+<link rel="modulepreload" href="js/ui/canvas.js">
+<link rel="modulepreload" href="js/ui/cmdline.js">
+<link rel="modulepreload" href="js/io/dxfin.js">
+<link rel="modulepreload" href="js/core/code.js">
+<link rel="modulepreload" href="js/core/inspect.js">
+<link rel="modulepreload" href="js/io/report.js">
+<link rel="modulepreload" href="js/io/platform.js">
+<link rel="modulepreload" href="js/ui/overlay.js">
+<link rel="modulepreload" href="js/ui/inspector.js">
+<link rel="modulepreload" href="js/ui/statusbar.js">
+<link rel="modulepreload" href="js/ui/levelbar.js">
+<link rel="modulepreload" href="js/ui/props.js">
+<link rel="modulepreload" href="js/ui/quickprops.js">
+<link rel="modulepreload" href="js/ui/historypanel.js">
+<link rel="modulepreload" href="js/ui/ribbon/wire.js">
+<link rel="modulepreload" href="js/tools/presets.js">
+<link rel="modulepreload" href="js/ui/recentbar.js">
+<link rel="modulepreload" href="js/io/snaps.js">
+<link rel="modulepreload" href="js/ui/searchcommon.js">
+<link rel="modulepreload" href="js/tools/blockcollect.js">
+<link rel="modulepreload" href="js/ui/blockpanel.js">
+<link rel="modulepreload" href="js/tutor/lessons.js">
+<link rel="modulepreload" href="js/tutor/engine.js">
+<link rel="modulepreload" href="js/ui/studio.js">
+<link rel="modulepreload" href="js/guide/floater.js">
+<link rel="modulepreload" href="js/ai/help/kb.js">
+<link rel="modulepreload" href="js/guide/lessons.js">
+<link rel="modulepreload" href="js/guide/auto.js">
+<link rel="modulepreload" href="js/guide/courses.js">
+<link rel="modulepreload" href="js/guide/catalog.js">
+<link rel="modulepreload" href="js/guide/viewer.js">
+<link rel="modulepreload" href="js/guide/engine.js">
+<link rel="modulepreload" href="js/guide/sketch.js">
+<link rel="modulepreload" href="js/guide/wire.js">
+<link rel="modulepreload" href="js/ui/palette.js">
+<link rel="modulepreload" href="js/ui/tour.js">
+<link rel="modulepreload" href="js/ui/appcmds.js">
+<link rel="modulepreload" href="js/ui/underlayPanel.js">
+<link rel="modulepreload" href="js/ui/pricingPanel.js">
+<link rel="modulepreload" href="js/core/model3d.js">
+<link rel="modulepreload" href="js/core/proj3d.js">
+<link rel="modulepreload" href="js/ui/view3d.js">
+<link rel="modulepreload" href="js/ui/navbar.js">
+<link rel="modulepreload" href="js/ui/viewcmds.js">
+<link rel="modulepreload" href="js/core/version.js">
+<link rel="modulepreload" href="js/ui/welcome-model.js">
+<link rel="modulepreload" href="js/ui/welcome.js">
+<link rel="modulepreload" href="js/ai/help/intent.js">
+<link rel="modulepreload" href="js/ai/net.js">
+<link rel="modulepreload" href="js/ai/ctx.js">
+<link rel="modulepreload" href="js/ai/ops.js">
+<link rel="modulepreload" href="js/ai/lang.js">
+<link rel="modulepreload" href="js/ai/help/provider.js">
+<link rel="modulepreload" href="js/ai/lint.js">
+<link rel="modulepreload" href="js/ai/help/answer.js">
+<link rel="modulepreload" href="js/ai/opsrun.js">
+<link rel="modulepreload" href="js/ai/smartblocks.js">
+<link rel="modulepreload" href="js/ai/templates_lib.js">
+<link rel="modulepreload" href="js/ui/gallery.js">
+<link rel="modulepreload" href="js/ui/helpbot.js">
+<link rel="modulepreload" href="js/ui/helpbutton.js">
+<link rel="modulepreload" href="js/core/migrate-autosave.js">
+<link rel="modulepreload" href="js/io/backup.js">
+<link rel="modulepreload" href="js/ui/optbar.js">
+<link rel="modulepreload" href="js/ui/defaults.js">
+<link rel="modulepreload" href="js/ai/generate.js">
+<link rel="modulepreload" href="js/ai/review.js">
+<link rel="modulepreload" href="js/ui/ai.js">
+<link rel="modulepreload" href="js/ui/searchIndex.js">
+<link rel="modulepreload" href="js/ui/appmenu.js">
+<link rel="modulepreload" href="js/ui/dyninput.js">
+<link rel="modulepreload" href="js/ui/ctxmenu.js">
+<link rel="modulepreload" href="js/ui/helppan.js">
+<link rel="modulepreload" href="js/ui/sugg.js">
+<link rel="modulepreload" href="js/ui/keymap.js">
+<link rel="modulepreload" href="js/app.js">
+<!-- PRELOAD:end -->
+<script type="module" src="js/bootguard.js"></script>
+<script type="module" src="js/app.js"></script>
+</body>
+</html>
