@@ -1,0 +1,49 @@
+# ═══ حزمةُ نشرٍ نظيفة ═══ P6-003
+# كان publish = "." ينشر 400 ملفاً و3.85 م.ب: السويتُ كلُّه وaudit/
+# وCHANGES.md وpackage.json — قابلةً للجلب من المضيف. الآن dist/
+# يبنيه scripts/build-dist.js بقائمةٍ صريحة ويتحقّق من سلامته
+# (كلُّ أصلٍ وكلُّ استيرادٍ موجود، ولا تسريبَ لما لا يُنشَر).
+[build]
+  publish = "dist"
+  command = "node scripts/gen-sw-core.js --check && node scripts/build-dist.js"
+
+[[headers]]
+  for = "/*"
+  [headers.values]
+    Content-Security-Policy = "default-src 'self'; script-src 'self'; style-src 'self'; img-src 'self' data: blob:; connect-src 'self' http://localhost:11434 http://localhost:8080 http://127.0.0.1:11434 http://127.0.0.1:8080 https://api.openai.com https://api.groq.com https://generativelanguage.googleapis.com https://openrouter.ai; object-src 'none'; base-uri 'none'; form-action 'none'; frame-ancestors 'none'"
+    X-Frame-Options = "DENY"
+    X-Content-Type-Options = "nosniff"
+    Referrer-Policy = "no-referrer"
+    # ═══ ثلاثةٌ كانت ناقصة ═══ P6-005
+    # Permissions-Policy بأقلّ صلاحية: التطبيقُ لا يستعمل أيّاً منها
+    # (لا كاميرا ولا ميكروفون ولا موقع ولا مستشعرات)، فالمنعُ لا يكسر
+    # شيئاً — والقائمةُ صريحةٌ لا "*" عمياء.
+    Permissions-Policy = "accelerometer=(), ambient-light-sensor=(), autoplay=(), battery=(), camera=(), display-capture=(), document-domain=(), encrypted-media=(), geolocation=(), gyroscope=(), idle-detection=(), magnetometer=(), microphone=(), midi=(), payment=(), publickey-credentials-get=(), screen-wake-lock=(), serial=(), usb=(), xr-spatial-tracking=()"
+    # COOP: same-origin يعزل مجموعةَ النوافذ فلا تصل إليها نافذةٌ
+    # فتحتها صفحةٌ أخرى. التطبيقُ لا يفتح نوافذَ ولا يتواصل معها.
+    Cross-Origin-Opener-Policy = "same-origin"
+    Cross-Origin-Resource-Policy = "same-origin"
+    # HSTS: سنةٌ مع النطاقات الفرعية. Netlify يخدم HTTPS لكل نطاقٍ
+    # (بما فيه فروعُ المعاينة) فالشرطُ متحقّق. لا preload: ذاك قرارُ
+    # مالكِ النطاق لا قرارُ المستودع، وإدراجُه لا رجعةَ فيه عملياً.
+    Strict-Transport-Security = "max-age=31536000; includeSubDomains"
+
+# ═══ لا كاش طويل بلا بصمة ═══
+# أسماء الملفّات ثابتة (app.js · theme.css)، فـimmutable يعني
+# مستخدماً عالقاً سنةً على نسخةٍ قديمة بعد أي ترقية. no-cache
+# تُجبر المتصفّح على التحقّق (304 إن لم يتغيّر) فلا كلفةَ على
+# النسخة نفسها، ولا جمودَ عند الترقية.
+# والنمط ببادئة "/" كما في كتلة /* أعلاه — كان "*.js" بلا بادئة،
+# والمرجَّح أنه لا يُطابق شيئاً في Netlify.
+# وحين يُضاف بناءٌ يُنتِج أسماءً مبصومة (app.a1b2c3.js) يُعاد الكاش
+# الطويل — لا قبل ذلك.
+
+[[headers]]
+  for = "/*.js"
+  [headers.values]
+    Cache-Control = "no-cache"
+
+[[headers]]
+  for = "/*.css"
+  [headers.values]
+    Cache-Control = "no-cache"
