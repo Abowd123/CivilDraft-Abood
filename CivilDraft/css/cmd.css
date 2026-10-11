@@ -1,0 +1,150 @@
+/* ═══ سطر الأوامر · الإدخال الحركي · القوائم · الخصائص السريعة ═══ */
+#cmdWrap{
+ flex:none; display:flex; flex-direction:column; min-inline-size:0;
+ opacity:var(--cmdOpa,1);
+}
+#cmdWrap[data-mode="top"]{order:-1}
+#cmdWrap[data-mode="top"] #cmdline{
+ border-block-start:none; border-block-end:1px solid var(--ln)}
+#cmdWrap[data-mode="top"] #log{
+ border-block-start:none; border-block-end:1px solid var(--ln);
+ order:-1}
+#cmdFloat{position:fixed;inset:0;z-index:var(--z-pop);pointer-events:none}
+#cmdWrap[data-mode="float"]{
+ position:fixed; pointer-events:auto; z-index:var(--z-pop);
+ min-inline-size:320px; resize:horizontal; overflow:hidden;
+ border:1px solid var(--ln2); border-radius:var(--r3);
+ box-shadow:var(--sh3),var(--edge);
+}
+#cmdWrap[data-mode="float"] #cmdline{
+ cursor:grab; border-block-start:none}
+:root.dragging #cmdWrap[data-mode="float"] #cmdline{cursor:grabbing}
+#cmdWrap[data-mode="float"] #log{border-radius:0 0 var(--r3) var(--r3)}
+#clFoldBtn,#clPrintBtn,#clMenuBtn{
+ flex:none; background:transparent; color:var(--fg3);
+ border:1px solid transparent; border-radius:var(--r1);
+ padding:var(--s-px) var(--s-5); cursor:pointer; line-height:1.4; font-size:11px;
+}
+#clFoldBtn:hover,#clPrintBtn:hover,#clMenuBtn:hover{background:var(--hov);color:var(--fg)}
+#cMenu{
+ position:fixed; z-index:var(--z-menu); min-inline-size:230px; max-block-size:80vh;
+ overflow-y:auto;
+ background:var(--bg3); border:1px solid var(--ln2); border-radius:var(--r3);
+ box-shadow:var(--sh3),var(--edge); padding:var(--s-4) 0;
+}
+
+/* ═══ الإدخال الحركي ═══ داخل #stage المعزول ═══ */
+#dynBox{
+ position:absolute; inset-inline-start:0; inset-block-start:0;
+ z-index:var(--z-dyn); display:flex; align-items:center; gap:var(--s-5);
+ padding:var(--s-4) var(--s-6); border-radius:var(--r2);
+ background:color-mix(in srgb,var(--bg3) 94%,transparent);
+ border:1px solid var(--brandb);
+ box-shadow:var(--sh2),var(--edge);
+ pointer-events:auto; will-change:transform;
+}
+.dF{display:inline-flex;align-items:center;gap:var(--s-3)}
+.dF label{color:var(--fg3);font-size:10.5px;margin:0}
+.dF input{
+ inline-size:62px; background:var(--bg4); color:var(--ok);
+ border:1px solid var(--fldbd); border-radius:var(--r1); padding:var(--s-2) var(--s-4);
+ font-family:var(--mono); font-size:11.5px;
+}
+.dF input:focus{outline:none;border-color:var(--ac);color:var(--fg)}
+.du{color:var(--fg3);font-size:10px}
+.dK{color:var(--brand);font-size:10.5px;font-family:var(--mono)}
+
+/* ═══ قائمة السياق ═══ */
+#ctxMenu{
+ position:fixed; z-index:var(--z-menu); min-inline-size:214px; max-block-size:82vh;
+ overflow-y:auto;
+ background:var(--bg3); border:1px solid var(--ln2); border-radius:var(--r3);
+ box-shadow:var(--sh3),var(--edge); padding:var(--s-4) 0;
+}
+
+/* ═══ الخصائص السريعة ═══ */
+#qpCard{
+ position:absolute; z-index:var(--z-qp); inline-size:238px;
+ background:color-mix(in srgb,var(--bg2) 95%,transparent);
+ border:1px solid var(--ln2); border-radius:var(--r3);
+ box-shadow:var(--sh2),var(--edge);
+ overflow:hidden;
+}
+.qpH{
+ display:flex; align-items:center; gap:var(--s-4);
+ padding:var(--s-4) var(--s-8); background:var(--bg3);
+ border-block-end:1px solid var(--ln);
+ color:var(--brand); font-size:11.5px; cursor:grab;
+}
+:root.dragging .qpH{cursor:grabbing}
+.qpH span{flex:1;overflow:hidden;text-overflow:ellipsis;
+ white-space:nowrap}
+.qpH button{
+ flex:none; background:transparent; color:var(--fg3);
+ border:1px solid transparent; border-radius:var(--r1);
+ padding:0 var(--s-4); cursor:pointer; font-size:11px; line-height:1.5;
+}
+.qpH button:hover{background:var(--hov);color:var(--fg)}
+#qpBody{padding:var(--s-5) var(--s-8) 7px;display:flex;flex-direction:column;
+ gap:var(--s-4)}
+.qf{display:flex;align-items:center;gap:var(--s-5)}
+.qf label{
+ flex:none; inline-size:74px; color:var(--fg3); font-size:11px;
+ margin:0; overflow:hidden; text-overflow:ellipsis;
+ white-space:nowrap;
+}
+.qf input,.qf select{
+ flex:1; min-inline-size:0; background:var(--bg4); color:var(--fg);
+ border:1px solid var(--fldbd); border-radius:var(--r1); padding:var(--s-2) var(--s-5);
+ font-size:11.5px;
+}
+.qf input.num{direction:ltr;unicode-bidi:isolate;text-align:start}
+.qf input:focus,.qf select:focus{outline:none;border-color:var(--ac);
+ box-shadow:var(--focus)}
+#qpBody .chk{font-size:11.5px}
+#qpBody .hint{margin:var(--s-2) 0;font-size:11px;color:var(--fg3)}
+
+@media (max-height:700px){
+ #cmdWrap[data-mode="float"]{max-block-size:44vh}
+}
+
+/* ═══ طباعة السجل A4 ═══ الورقة المؤقّتة #logPrint تُبنى في printLog() */
+#logPrint{display:none}
+@page logpage{size:A4;margin:12mm}
+@media print{
+ html.printLog body>*:not(#logPrint){display:none!important}
+ html.printLog #logPrint{display:block!important;page:logpage;
+  color:#000;background:#fff;font-family:system-ui,sans-serif;
+  line-height:1.6;direction:rtl}
+ html.printLog #logPrint h3{margin:0 0 6mm}
+ html.printLog #logPrint .logPrintBody{height:auto!important;
+  max-height:none!important;overflow:visible!important;
+  background:#fff;color:#000;border:0}
+ html.printLog #logPrint .logPrintBody>*{color:#000;
+  border-bottom:1px solid #ddd;padding:1mm 0;break-inside:avoid}
+ #log{height:auto!important;overflow:visible!important}
+}
+
+/* P5-006: سطرُ الأوامر العائم يُسحَب بالإصبع من شريطه لا من حقله */
+#cmdWrap[data-mode="float"] #cmdline{touch-action:none}
+#cmdWrap[data-mode="float"] #cmdline input{touch-action:auto}
+
+/* ═══ مفاتيحُ الكتابة تحت سطر الأوامر (cmdkeys.js) ═══ */
+#clKeys{display:flex;flex-wrap:wrap;gap:var(--s-5);align-items:center;
+ padding:var(--s-4) var(--s-12) var(--s-6);background:var(--bg2);
+ border-top:1px dashed var(--ln);font-size:11px;color:var(--fg3)}
+#clKeys[hidden]{display:none}
+#clKeys .ck{display:inline-flex;align-items:center;gap:var(--s-4);
+ background:none;border:0;padding:0;color:inherit;font:inherit;cursor:pointer}
+#clKeys .ck.key{cursor:default}
+#clKeys .ck:hover{color:var(--fg)}
+#clKeys kbd{font-family:var(--mono);font-size:11px;direction:ltr;unicode-bidi:isolate;
+ padding:var(--s-px) var(--s-6);border-radius:var(--r1);background:var(--bg3);border:1px solid var(--ln2);color:var(--fg)}
+#clKeys .ck.step kbd{border-color:var(--ac);color:var(--acf)}
+#clKeys .ck:focus-visible{outline:var(--ring);outline-offset:var(--s-2);border-radius:var(--r1)}
+#cmdWrap[data-mode="float"] #clKeys{display:none}
+
+
+/* وضع اللابتوب: سطر أوامر ثابت الحضور وسريع القراءة */
+:root[data-laptop] #cmdline{min-height:46px;padding-block:5px}
+:root[data-laptop] #cmdline input{min-height:34px}
