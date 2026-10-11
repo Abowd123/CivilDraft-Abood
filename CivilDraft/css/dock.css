@@ -1,0 +1,172 @@
+/* ═══ الإرساء: أعمدة · عائمة · شارات · قوائم ═══
+   خصائص منطقية بحتة — dom.js يحرس ذلك. */
+
+#main{position:relative}
+
+/* ═══ الأعمدة ═══ */
+.dock{
+ flex:none; overflow-y:auto; overflow-x:hidden;
+ background:var(--bg2); padding:0 0 26px;
+ min-inline-size:0;
+}
+#side{border-inline-end:1px solid var(--ln)}
+#sideE{border-inline-start:1px solid var(--ln)}
+.dock::-webkit-scrollbar{width:9px}
+.dock::-webkit-scrollbar-thumb{background:var(--thumb);
+ border-radius:5px}
+.dock::-webkit-scrollbar-thumb:hover{background:var(--ln2)}
+
+/* العمود المُخفى تلقائياً يطفو فوق اللوحة عند انكشافه */
+.dock.auto{
+ position:absolute; inset-block:0; z-index:var(--z-dock);
+ box-shadow:var(--sh3);
+}
+#side.auto{inset-inline-start:27px;
+ border-inline-start:1px solid var(--ln2)}
+#sideE.auto{inset-inline-end:27px;
+ border-inline-end:1px solid var(--ln2)}
+
+/* ═══ الفاصل ═══ */
+.dsz{
+ flex:none; inline-size:5px; cursor:col-resize;
+ background:transparent; border:none; padding:0;
+ align-self:stretch; transition:background var(--t) var(--ease);
+}
+.dsz:hover,.dsz:focus-visible{background:var(--acq);outline:none}
+:root.dragging{cursor:col-resize;user-select:none}
+:root.dragging *{cursor:col-resize!important}
+
+/* ═══ شارات الإخفاء التلقائي ═══ */
+.strip{
+ flex:none; inline-size:27px; display:flex; flex-direction:column;
+ gap:var(--s-3); padding:var(--s-5) 0; align-items:center;
+ background:var(--bg2); border-inline:1px solid var(--ln);
+}
+.strip button{
+ display:flex; flex-direction:column; align-items:center; gap:var(--s-3);
+ background:var(--bg3); color:var(--fg2);
+ border:1px solid var(--ln); border-radius:var(--r1);
+ padding:var(--s-5) var(--s-2); cursor:pointer; inline-size:21px;
+}
+.strip button span{
+ writing-mode:vertical-rl; font-size:10.5px;
+ max-block-size:120px; overflow:hidden; text-overflow:ellipsis;
+ white-space:nowrap;
+}
+.strip button:hover{background:var(--hov);color:var(--fg)}
+
+/* ═══ ترويسة اللوحة ═══ */
+details.sec>summary{display:flex;align-items:center;gap:var(--s-6)}
+details.sec>summary::before{flex:none;color:var(--fg3)}
+.pT{margin-inline-start:auto;display:inline-flex;gap:var(--s-px);flex:none}
+.pB{
+ background:transparent; color:var(--fg3);
+ border:1px solid transparent; border-radius:var(--r1);
+ padding:0 var(--s-4); cursor:pointer; font-size:12px; line-height:1.5;
+}
+.pB:hover{background:var(--hov);color:var(--fg)}
+.pB.pX:hover{color:var(--er)}
+details.sec>summary:not(:hover) .pB{opacity:.45}
+
+/* ═══ وضع التبويبات ═══ */
+.zTabs{
+ position:sticky; inset-block-start:0; z-index:3;
+ display:flex; flex-wrap:wrap; gap:var(--s-2);
+ padding:var(--s-5) var(--s-6); background:var(--bg2);
+ border-block-end:1px solid var(--ln);
+}
+.zTabs button{
+ display:inline-flex; align-items:center; gap:var(--s-4);
+ background:var(--bg3); color:var(--fg2);
+ border:1px solid var(--ln); border-radius:var(--r1);
+ padding:var(--s-3) 7px; cursor:pointer; font-size:11.5px;
+ max-inline-size:132px;
+}
+.zTabs button span{overflow:hidden;text-overflow:ellipsis;
+ white-space:nowrap}
+.zTabs button:hover{background:var(--hov);color:var(--fg)}
+.zTabs button.on{background:var(--acq);color:var(--acf);
+ border-color:var(--acb)}
+.zTabs button:focus-visible{outline:var(--ring);
+ outline-offset:-2px}
+/* في التبويبات لا طيّ: اللوح الجاري مفتوحٌ دائماً */
+details.sec.inTab>summary{cursor:default}
+details.sec.inTab>summary::before{content:"";margin:0}
+
+/* ═══ النوافذ العائمة ═══ */
+#floats{position:fixed;inset:0;z-index:var(--z-floats);pointer-events:none}
+.flt{
+ position:fixed; pointer-events:auto;
+ display:flex; flex-direction:column;
+ background:var(--bg2); border:1px solid var(--ln2); border-radius:var(--r3);
+ box-shadow:var(--sh3),var(--edge);
+ overflow:hidden; resize:both; min-inline-size:220px;
+ min-block-size:120px;
+}
+.flt.max{
+ inset-inline:auto; inset-block:auto;
+ inset-inline-start:var(--s-8); inset-block-start:44px;
+ inline-size:calc(100vw - 16px); block-size:calc(100vh - 96px);
+ resize:none;
+}
+.flt>details.sec{
+ flex:1; display:flex; flex-direction:column;
+ border-block-end:none; min-block-size:0;
+}
+.flt>details.sec>summary{
+ flex:none; cursor:grab; background:var(--bg3);
+ border-block-end:1px solid var(--ln);
+}
+:root.dragging .flt>details.sec>summary{cursor:grabbing}
+.flt>details.sec>*:not(summary){overflow-y:auto}
+.flt>details.sec{overflow:hidden}
+
+/* ═══ القوائم المنبثقة ═══ */
+#pMenu,#wsMenu{
+ position:fixed; z-index:var(--z-menu); min-inline-size:206px;
+ background:var(--bg3); border:1px solid var(--ln2); border-radius:var(--r3);
+ box-shadow:var(--sh3),var(--edge);
+ padding:var(--s-4) 0; overflow:hidden;
+}
+.pmH{
+ padding:var(--s-5) 11px var(--s-6); color:var(--wr); font-size:11.5px;
+ border-block-end:1px solid var(--ln); margin-block-end:3px;
+}
+.pmI{
+ display:flex; align-items:center; gap:var(--s-8); inline-size:100%;
+ background:transparent; color:var(--fg2);
+ border:none; padding:var(--s-5) 11px; cursor:pointer; text-align:start;
+ font-size:12px;
+}
+.pmI span:not(.ky){flex:1}
+.pmI .ky{color:var(--ok);font-size:11px}
+.pmI:hover{background:var(--hov);color:var(--fg)}
+.pmI:disabled{opacity:.34;cursor:default}
+.pmI:disabled:hover{background:transparent}
+.pmI:focus-visible{outline:var(--ring);outline-offset:-2px}
+.pmI.pmDel{
+ margin-block-start:-30px; margin-inline-start:auto; /* استثناءٌ مُعلَن: سحبٌ سالبٌ بمقدارِ ارتفاعِ الزرِّ نفسِه (30px) ليجلسَ في سطرِ العنوانِ — يُقاس بالزرِّ لا بالكثافة */
+ inline-size:30px; padding:var(--s-5) 0; justify-content:center;
+ position:relative; color:var(--fg3);
+}
+.pmI.pmDel:hover{color:var(--er);background:transparent}
+.pmS{height:1px;background:var(--ln);margin:var(--s-4) 9px}
+
+#pPark{display:none}
+
+@media (max-width:1080px){
+ #sideE{display:none}
+}
+
+/* ═══ أهدافُ السحب على اللمس ═══ P5-006
+   الفاصلُ وترويسةُ العائمة يُسحَبان بالإصبع، فلا يُفسَّر السحبُ
+   تمريراً للصفحة. ولا none للصفحة كلِّها — هذان العنصران وحدهما. */
+.dsz{touch-action:none}
+.flt > details.sec > summary{touch-action:none}
+
+
+/* اللابتوب: اللوحات الجانبية لا تأكل مساحة الرسم إلا عند فتحها */
+@media (min-width:1100px) and (pointer:fine){
+ :root[data-laptop] #sideE{width:248px}
+ :root[data-laptop] #sideE .sec>summary{min-height:34px}
+}
