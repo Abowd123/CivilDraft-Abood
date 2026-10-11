@@ -1,0 +1,4 @@
+# CivilDraft — تطبيقٌ من صفحةٍ واحدة، لا مساراتَ داخلية تُزحَف
+User-agent: *
+Allow: /
+Disallow: /dist/
