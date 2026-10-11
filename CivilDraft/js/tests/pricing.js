@@ -1,0 +1,12 @@
+import assert from "node:assert/strict";
+import { price, setRate, getRate, setTaxRate, round2 } from "../core/pricing.js";
+import { toCSV, boqToCSV } from "../io/boqcsv.js";
+let p = 0, f = 0;
+const test = (n, fn) => { try { fn(); p++; console.log("✓ " + n); } catch (e) { f++; console.error("✗ " + n + " → " + (e.message || e)); } };
+test("تسعير أساسي", () => { setTaxRate(0); const r = price([{ key: "wall", qty: 10 }, { key: "door", qty: 3 }]); assert.equal(r.subtotal, 2250); assert.equal(r.total, 2250); });
+test("الضريبة تُحتسب", () => { setTaxRate(0.15); const r = price([{ key: "wall", qty: 10 }]); assert.equal(r.tax, 180); assert.equal(r.total, 1380); });
+test("تعديل سعر الوحدة", () => { setRate("floor", 100); setTaxRate(0); assert.equal(getRate("floor"), 100); assert.equal(price([{ key: "floor", qty: 5 }]).subtotal, 500); });
+test("سعر مخصص", () => { setTaxRate(0); assert.equal(price([{ key: "wall", qty: 2, rate: 50 }]).subtotal, 100); });
+test("التقريب وCSV", () => { assert.equal(round2(0.1 + 0.2), 0.3); const csv = toCSV([{ a: "x,y", b: 'he said "hi"' }], [{ key: "a", title: "A" }, { key: "b", title: "B" }]); assert.ok(csv.startsWith("\uFEFF")); assert.ok(csv.includes('"x,y"')); assert.ok(csv.includes('"he said ""hi"""')); });
+test("CSV الإجماليات", () => { setTaxRate(0.15); const csv = boqToCSV(price([{ key: "door", qty: 1 }])); assert.ok(csv.includes("الإجمالي النهائي")); assert.ok(csv.includes("402.5")); });
+console.log(`\n${p} ناجح، ${f} فاشل`); process.exit(f ? 1 : 0);
