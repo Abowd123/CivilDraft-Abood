@@ -1,0 +1,54 @@
+/* ═══ استوديو الدروس ═══ */
+#studio{position:fixed;inset-inline-end:16px;top:96px;width:340px;max-height:calc(100vh - 190px);display:flex;flex-direction:column;
+ z-index:var(--z-tour);background:var(--bg3);border:1px solid var(--ln2);border-radius:8px;box-shadow:0 10px 30px rgba(0,0,0,.35);color:var(--fg2);font-size:13px}
+#studio[hidden]{display:none}
+#studio .sh{display:flex;justify-content:space-between;align-items:center;padding:10px 13px;border-bottom:1px solid var(--ln)}
+#studio .sh b{color:var(--fg1,inherit);font-size:14px}
+#studio .sb{padding:10px 13px;overflow:auto}
+#studio .sl{display:flex;gap:8px;align-items:center;justify-content:space-between}
+#studio select{flex:1;min-height:32px}
+#studio .sg{margin:10px 0;line-height:1.7}
+#studio .sg small{color:var(--fg3)}
+#studio .ss{margin:0;padding-inline-start:20px;display:flex;flex-direction:column;gap:6px;line-height:1.7}
+#studio .ss li{padding:4px 6px;border-radius:4px}
+#studio .ss li.on{background:var(--acq);color:var(--acf)}
+#studio .ss li.done{color:var(--fg3)}
+#studio .sf{display:flex;flex-wrap:wrap;gap:6px;padding:10px 13px;border-top:1px solid var(--ln)}
+#studio .sf button{background:var(--acq);color:var(--acf);border:0;border-radius:5px;padding:7px 11px;cursor:pointer;min-height:32px}
+#studio .sf button.rec{background:#c0392b;color:#fff}
+#studio .sf .gh,#studio .sh .gh{background:transparent;color:var(--fg2);border:1px solid var(--ln2)}
+#studio .sf button:disabled{opacity:.45;cursor:default}
+#studio .sp{flex-basis:100%}
+#studio .sx{display:flex;gap:6px;flex-basis:100%}
+#studioCur{position:fixed;inset-block-start:0;inset-inline-start:0;width:0;height:0;z-index:var(--z-tour);pointer-events:none}
+#studioCur[hidden]{display:none}
+#studioCur::before{content:"";position:absolute;inset-block-start:0;inset-inline-start:0;width:0;height:0;border-style:solid;border-width:0 0 22px 14px;
+ border-color:transparent transparent transparent #fff;filter:drop-shadow(0 1px 2px rgba(0,0,0,.7));transform:rotate(-20deg);transform-origin:0 0}
+#studioCur::after{content:"";position:absolute;inset-block-start:0;inset-inline-start:0;width:28px;height:28px;margin:-14px;border-radius:50%;border:3px solid #e74c3c;opacity:0}
+#studioCur.hit::after{animation:stHit .45s cubic-bezier(.16,1,.3,1)}
+@keyframes stHit{from{opacity:1;transform:scale(.4)}to{opacity:0;transform:scale(1.5)}}
+#studioCap{position:fixed;inset-inline:0;margin-inline:auto;width:fit-content;bottom:92px;max-width:min(760px,80vw);z-index:var(--z-tour);
+ background:rgba(18,22,20,.92);color:#f3f5f2;padding:12px 18px;border-radius:8px;font-size:17px;line-height:1.7;pointer-events:none;
+ display:flex;gap:12px;align-items:baseline}
+#studioCap[hidden]{display:none}
+#studioCap .cn{font-family:var(--mono);color:#ff8a70;font-size:13px;direction:ltr}
+@media (max-width:640px){#studio{inset-inline:8px;width:auto;top:auto;bottom:80px;max-height:55vh}#studioCap{font-size:14px;bottom:auto;top:70px}}
+/* عنصرٌ يشير إليه الدرس (زرٌّ أو حقلٌ أو لوحة): إطارٌ يتنفّس ثم يزول */
+.studioHi{outline:3px solid #ff8a70;outline-offset:2px;border-radius:4px;animation:stHi 1.1s ease-in-out 2}
+@keyframes stHi{50%{outline-color:rgba(255,138,112,.25)}}
+@media (prefers-reduced-motion:reduce){#studioCur.hit::after{animation:none}.studioHi{animation:none}}
+
+/* ═══ وضعُ العرض (presenter.js) ═══ للتدريس والتسجيل: ما يُكتب ومفاتيحُك كبيرةٌ على الشاشة */
+#prKeys{position:fixed;inset-inline-start:24px;bottom:110px;z-index:var(--z-tour);
+ display:flex;flex-direction:column;align-items:flex-start;gap:8px;pointer-events:none}
+#prKeys .pk{font-family:var(--mono);font-size:22px;direction:ltr;unicode-bidi:isolate;
+ padding:8px 16px;border-radius:10px;background:rgba(10,13,19,.92);color:#fff;
+ border:2px solid #e0b46a;box-shadow:0 6px 22px rgba(0,0,0,.45);transition:opacity .35s,transform .35s}
+#prKeys .pk.key{border-color:#6aa6ff;font-size:18px}
+#prKeys .pk.out{opacity:0;transform:translateY(6px)}
+.presenter #cmdline{font-size:17px}
+.presenter #clIn{font-size:18px}
+.presenter #clKeys{font-size:13px}
+.presenter #clKeys kbd{font-size:13px}
+.presenter #optbar{font-size:14px}
+@media (prefers-reduced-motion:reduce){#prKeys .pk{transition:none}}
