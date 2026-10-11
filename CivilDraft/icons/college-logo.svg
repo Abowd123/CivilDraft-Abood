@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256" role="img" aria-label="شعار الكلية"><title>شعار الكلية</title>
+<circle cx="128" cy="128" r="126" fill="#18202d"/>
+<circle cx="128" cy="128" r="112" fill="none" stroke="#e0b46a" stroke-width="5"/>
+<circle cx="128" cy="128" r="101" fill="none" stroke="#e0b46a" stroke-width="1.5" stroke-dasharray="2 6.2" opacity=".8"/>
+<g fill="none" stroke="#f3ead8" stroke-linejoin="miter" stroke-linecap="square">
+<path d="M58 150L128 82L198 150" stroke-width="10"/>
+<path d="M93 116V150M163 116V150M128 82V150M93 116L128 150L163 116" stroke-width="5"/>
+</g>
+<rect x="52" y="148" width="152" height="13" fill="#e0b46a"/>
+<g fill="#f3ead8"><rect x="70" y="161" width="13" height="36"/><rect x="173" y="161" width="13" height="36"/>
+<rect x="63" y="197" width="27" height="7"/><rect x="166" y="197" width="27" height="7"/></g>
+<path d="M64 210H192" stroke="#e0b46a" stroke-width="3"/>
+<path d="M74 210l-6 8M89 210l-6 8M104 210l-6 8M119 210l-6 8M134 210l-6 8M149 210l-6 8M164 210l-6 8M179 210l-6 8" stroke="#e0b46a" stroke-width="2"/>
+<circle cx="128" cy="82" r="7" fill="#e0b46a"/>
+</svg>
