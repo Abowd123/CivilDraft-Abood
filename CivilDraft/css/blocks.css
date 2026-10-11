@@ -1,0 +1,26 @@
+/* ═══ أنماط لوحة العناصر ═══
+   كانت تُحقَن من blockpanel.js بعنصر <style> — وذلك يستلزم
+   'unsafe-inline' في CSP. صارت ملفاً يُحمَّل كسائر الأنماط. */
+#blkPanel{position:fixed;inset-block:56px auto;inset-inline-start:12px;z-index:var(--z-blocks);
+ width:194px;max-height:min(70vh,560px);display:flex;flex-direction:column;
+ background:var(--bg2,#1a1d21);color:var(--fg,#e9edf2);
+ border:1px solid var(--ln,#2a2f36);border-radius:8px;
+ box-shadow:0 12px 34px rgba(0,0,0,.42);overflow:hidden;font:12.5px/1.4 var(--ui,system-ui,sans-serif)}
+#blkPanel[hidden]{display:none}#blkPanel .blk-h{display:flex;align-items:center;padding:8px 10px;
+ background:var(--bg3,#20242a);border-bottom:1px solid var(--ln,#2a2f36)}
+#blkPanel .blk-title{font-weight:600}#blkPanel .blk-x{margin-inline-start:auto;background:none;border:0;
+ cursor:pointer;color:var(--fg3,#8a929c);font-size:14px;padding:2px 5px}
+#blkPanel .blk-body{overflow-y:auto;padding:8px;display:grid;grid-template-columns:repeat(2,1fr);
+ gap:6px;align-content:start}#blkPanel .blk-it{display:flex;flex-direction:column;align-items:center;
+ gap:4px;padding:6px 4px;cursor:pointer;border-radius:7px;color:var(--fg2,#c4ccd6);
+ background:var(--bg2,#1a1d21);border:1px solid var(--ln2,#333a42)}
+#blkPanel .blk-it:hover{border-color:var(--ac,#6ea8fe);color:var(--fg,#e9edf2)}
+#blkPanel .blk-th{width:100%;height:38px;border-radius:5px;background:var(--bg3,#20242a)}
+#blkPanel .blk-lbl{font-size:11px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:100%}
+#blkPanel .blk-sc{display:flex;gap:6px;padding:6px 8px;justify-content:space-between;
+ border-bottom:1px solid var(--ln,#2a2f36)}
+#blkPanel .blk-scale{display:inline-flex;align-items:center;gap:3px;font-size:10px;
+ color:var(--fg3,#8a929c);direction:rtl}
+#blkPanel .blk-scale input{width:44px;font-size:11px;text-align:center;padding:2px;
+ background:var(--bg3,#20242a);color:var(--fg,#e9edf2);
+ border:1px solid var(--ln2,#333a42);border-radius:4px}
