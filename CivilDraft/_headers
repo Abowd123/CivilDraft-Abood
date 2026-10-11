@@ -1,0 +1,20 @@
+/*
+  Content-Security-Policy: default-src 'self'; script-src 'self'; style-src 'self'; img-src 'self' data: blob:; connect-src 'self' http://localhost:11434 http://localhost:8080 http://127.0.0.1:11434 http://127.0.0.1:8080 https://api.openai.com https://api.groq.com https://generativelanguage.googleapis.com https://openrouter.ai; object-src 'none'; base-uri 'none'; form-action 'none'; frame-ancestors 'none'
+  X-Frame-Options: DENY
+  X-Content-Type-Options: nosniff
+  Referrer-Policy: no-referrer
+  Permissions-Policy: accelerometer=(), ambient-light-sensor=(), autoplay=(), battery=(), camera=(), display-capture=(), document-domain=(), encrypted-media=(), geolocation=(), gyroscope=(), idle-detection=(), magnetometer=(), microphone=(), midi=(), payment=(), publickey-credentials-get=(), screen-wake-lock=(), serial=(), usb=(), xr-spatial-tracking=()
+  Cross-Origin-Opener-Policy: same-origin
+  Cross-Origin-Resource-Policy: same-origin
+  Strict-Transport-Security: max-age=31536000; includeSubDomains
+
+# ═══ لا كاش طويل بلا بصمة ═══
+# أسماء الملفّات ثابتة (app.js · theme.css)، فـimmutable يعني مستخدماً
+# عالقاً سنةً على نسخةٍ قديمة بعد أي ترقية. no-cache تُجبر المتصفّح على
+# التحقّق (304 إن لم يتغيّر) فلا كلفةَ على النسخة نفسها ولا جمودَ عند
+# الترقية. وهذا الملفّ يُقرأ مع netlify.toml — فلا يجوز أن يخالفه.
+/*.js
+  Cache-Control: no-cache
+
+/*.css
+  Cache-Control: no-cache
