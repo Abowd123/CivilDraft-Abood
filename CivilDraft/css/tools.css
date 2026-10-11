@@ -1,0 +1,185 @@
+/* ═══ شريط الأدوات · شريط الخيارات · اللوحة الجانبية ═══ */
+#tools{
+ flex:none; display:flex; align-items:center; flex-wrap:wrap; gap:var(--s-4);
+ padding:var(--s-6) var(--s-12); background:var(--bg2);
+ border-bottom:1px solid var(--ln);
+}
+#tools .sp{width:10px}
+#tools button{
+ display:inline-flex; align-items:center; gap:var(--s-5);
+ background:var(--bg3); color:var(--fg2);
+ border:1px solid var(--ln); border-radius:var(--r2);
+ padding:var(--s-4) 11px; cursor:pointer; white-space:nowrap;
+ transition:background var(--t) var(--ease),color var(--t) var(--ease),
+  border-color var(--t) var(--ease);
+}
+#tools button.ico{padding:var(--s-4) var(--s-8)}
+#tools button:hover{background:var(--hov);color:var(--fg)}
+#tools button.on{background:var(--acq);color:var(--acf);border-color:var(--acb)}
+#tools button.del{color:var(--er)}
+#tools button:disabled{opacity:.35;cursor:default}
+
+/* عائم فوق الرسم (داخل #stage) فلا يحجز صفّاً كاملاً من المساحة.
+   فارغٌ في وضع التحديد فيختفي، ولا يعترض نقرات الرسم خارج أزراره. */
+#optbar{
+ position:absolute; z-index:var(--z-optbar); inset-block-start:var(--s-8); inset-inline-start:var(--s-8);
+ max-inline-size:calc(100% - 64px); pointer-events:auto;
+ display:flex; align-items:center; gap:9px; flex-wrap:wrap;
+ padding:var(--s-4) var(--s-10); border-radius:var(--r3);
+ background:color-mix(in srgb,var(--bg2) 88%,transparent);
+ backdrop-filter:blur(8px);
+ border:1px solid var(--ln2); box-shadow:var(--sh2),var(--edge);
+}
+#optbar:empty{display:none}
+#optbar .tl{color:var(--brand);font-size:12px;white-space:nowrap;font-weight:600}
+#optbar .of{display:flex;align-items:center;gap:var(--s-5)}
+#optbar .of>span{color:var(--fg3);font-size:11.5px;white-space:nowrap}
+#optbar input[type=text],#optbar input[type=number],#optbar select{
+ background:var(--bg4); color:var(--fg);
+ border:1px solid var(--fldbd); border-radius:var(--r1); padding:var(--s-3) var(--s-6);
+}
+#optbar input[type=text],#optbar input[type=number]{width:64px}
+#optbar input:focus,#optbar select:focus{
+ outline:none;border-color:var(--ac);box-shadow:var(--focus)}
+#optbar label.chk{
+ display:inline-flex;align-items:center;gap:var(--s-5);color:var(--fg2);
+ font-size:11.5px;cursor:pointer}
+#optbar .hint{color:var(--fg3);font-size:11.5px}
+/* اختيار سريع: مجموعة أزرار متلاصقة */
+#optbar .seg{display:inline-flex;border:1px solid var(--fldbd);
+ border-radius:var(--r1);overflow:hidden}
+#optbar .seg button{background:var(--bg4);color:var(--fg2);border:0;
+ border-inline-start:1px solid var(--fldbd);padding:var(--s-3) var(--s-10);
+ font:inherit;font-size:11.5px;cursor:pointer;white-space:nowrap}
+#optbar .seg button:first-child{border-inline-start:0}
+#optbar .seg button:hover{background:var(--hov);color:var(--fg)}
+#optbar .seg button.on{background:var(--acq);color:var(--acf)}
+#optbar .seg button:focus-visible{outline:none;box-shadow:var(--focus)}
+
+/* ═══ «المزيد» ═══ المرحلة ٦: ثلاثةٌ ظاهرةٌ والباقي هنا.
+   المُنسدلُ يُسنَد إلى حدِّ الشريطِ ويفتح للأسفلِ لأنّ الشريطَ نفسَه
+   في أعلى اللوحةِ، ففتحُه للأعلى يخرج عن الشاشة. */
+#optbar{position:absolute}
+#okMore{
+ display:inline-flex; align-items:center; gap:var(--s-5);
+ background:var(--bg4); color:var(--fg2);
+ border:1px solid var(--fldbd); border-radius:var(--r1);
+ padding:var(--s-3) var(--s-8); font:inherit; font-size:11.5px;
+ cursor:pointer; white-space:nowrap; position:relative;
+}
+#okMore:hover{background:var(--hov); color:var(--fg)}
+#okMore[aria-expanded="true"]{background:var(--acq); color:var(--acf);
+ border-color:var(--acb)}
+#okMore:focus-visible{outline:none; box-shadow:var(--focus)}
+/* العدَدُ يُقال دائماً: المستخدمُ يعرف كم خلفَ الزرِّ قبل أن يفتحه */
+#okMore .n{
+ background:var(--bg3); color:var(--fg3); border-radius:var(--r-pill);
+ padding:0 var(--s-5); font-size:11px; font-variant-numeric:tabular-nums;
+}
+/* والنقطةُ لا تُرى إلّا إن غُيِّر مخفيٌّ عن افتراضه — الافتراضُ صامتٌ.
+   ولونُها لونُ العلامةِ لا لونُ خطرٍ: قيمةٌ مختارةٌ لا خطأ. */
+#okMore .dot{display:none}
+#okMore.chg .dot{
+ display:block; inline-size:var(--s-6); block-size:var(--s-6);
+ border-radius:var(--r-pill); background:var(--brand);
+}
+.okPop{
+ position:absolute; inset-block-start:calc(100% + var(--s-6));
+ inset-inline-end:var(--s-8); z-index:var(--z-optbar);
+ display:none; flex-wrap:wrap; align-items:center; gap:var(--s-10);
+ max-inline-size:min(520px,92vw);
+ padding:var(--s-10) var(--s-12); border-radius:var(--r3);
+ background:var(--glass); backdrop-filter:blur(8px);
+ border:1px solid var(--ln2); box-shadow:var(--sh2),var(--edge);
+}
+.okPop.on{display:flex}
+/* الوحدةُ المركَّبةُ: تسميةٌ واحدةٌ وضوابطُها متلاصقةً فتُقرأ واحداً */
+#optbar .of.grp{gap:var(--s-8)}
+#optbar .of.grp label.chk{gap:var(--s-3)}
+
+#side{
+ flex:none; width:312px; overflow-y:auto; overflow-x:hidden;
+ background:var(--bg2); border-inline-end:1px solid var(--ln);
+ padding:0 0 26px;
+}
+#side::-webkit-scrollbar,#log::-webkit-scrollbar{width:9px}
+#side::-webkit-scrollbar-thumb,#log::-webkit-scrollbar-thumb{
+ background:var(--thumb);border-radius:5px}
+#side::-webkit-scrollbar-thumb:hover,#log::-webkit-scrollbar-thumb:hover{
+ background:var(--ln2)}
+
+details.sec{border-bottom:1px solid var(--ln)}
+details.sec>summary{
+ padding:var(--s-8) var(--s-12); cursor:pointer; color:var(--fg2);
+ font-weight:600; font-size:12.5px; letter-spacing:.15px;
+ background:var(--bg2);
+ position:sticky; top:0; z-index:2; list-style:none;
+}
+details.sec>summary::-webkit-details-marker{display:none}
+details.sec>summary::before{content:"▸ ";color:var(--fg3)}
+details.sec[open]>summary::before{content:"▾ "}
+details.sec>summary:hover{color:var(--fg)}
+details.sec>*:not(summary){padding-inline:11px}
+details.sec>*:not(summary):last-child{padding-bottom:9px}
+
+details.sub{border:1px solid var(--ln);border-radius:var(--r1);
+ margin:var(--s-4) 0;background:var(--bg4)}
+details.sub>summary{padding:var(--s-4) var(--s-8);cursor:pointer;
+ color:var(--fg2);font-size:11.5px;list-style:none}
+details.sub>summary::-webkit-details-marker{display:none}
+details.sub>summary::before{content:"▸ ";color:var(--fg3)}
+details.sub[open]>summary::before{content:"▾ "}
+details.sub>div{padding:0 var(--s-8) var(--s-6)}
+
+.row{margin:var(--s-5) 0}
+.row2{display:flex;gap:7px;margin:var(--s-5) 0}
+.row2>.f{flex:1;min-width:0}
+label{display:block;color:var(--fg3);font-size:11px;margin-bottom:var(--s-2)}
+#side input[type=text],#side input[type=number],#side select{
+ width:100%; background:var(--bg4); color:var(--fg);
+ border:1px solid var(--fldbd); border-radius:var(--r2); padding:var(--s-5) var(--s-8);
+}
+#side input:focus,#side select:focus{outline:none;border-color:var(--ac);
+ box-shadow:var(--focus)}
+#side input[type=color]{
+ width:100%; height:24px; padding:var(--s-px) var(--s-2); cursor:pointer;
+ background:var(--bg4); border:1px solid var(--fldbd); border-radius:var(--r1);
+}
+#side input[type=color]:focus{outline:none;border-color:var(--ac)}
+#side input.num,#optbar input.num{
+ direction:ltr;unicode-bidi:isolate;text-align:start}
+label.chk{display:inline-flex;align-items:center;gap:var(--s-5);margin:0;
+ color:var(--fg2);font-size:11.5px;cursor:pointer}
+label.chk input{width:auto}
+.btnrow{display:flex;gap:var(--s-6);flex-wrap:wrap;margin:7px 0}
+#side button{
+ background:var(--bg3); color:var(--fg2);
+ border:1px solid var(--ln); border-radius:var(--r2);
+ padding:var(--s-5) var(--s-10); cursor:pointer; flex:1; white-space:nowrap;
+ transition:background var(--t) var(--ease),color var(--t) var(--ease);
+}
+#side button:hover{background:var(--hov);color:var(--fg)}
+#side button.pri{background:var(--acq);color:var(--acf);border-color:var(--acb)}
+#side button.del{color:var(--er)}
+.hint{color:var(--fg3);font-size:11px;line-height:1.55;margin:var(--s-6) 0}
+.hint.warn{color:var(--wr)}
+.phead{
+ color:var(--brand); font-family:var(--mono); font-size:12px;
+ padding:var(--s-3) 0 var(--s-5); border-bottom:1px solid var(--ln); margin-bottom:var(--s-5);
+}
+.ro{
+ display:block; padding:var(--s-4) var(--s-6); color:var(--fg2);
+ background:var(--bg4); border:1px solid var(--ln); border-radius:var(--r1);
+ font-family:var(--mono); font-size:11.5px;
+}
+@media (max-width:1080px){
+ #side{width:262px}
+ #clPrompt{min-width:150px}
+}
+
+/* مفتاحُ الكتابة بجانب تسمية الخيار: «السماكة t=» — يُعلِّم ما يُكتب في سطر الأوامر */
+#optbar .of[data-key]>span:first-child::after,
+#optbar label.chk[data-key]::after,
+#okPop .of[data-key]>span:first-child::after{
+ content:attr(data-key) "=";margin-inline-start:4px;font-family:var(--mono);font-size:10px;
+ color:var(--fg3);opacity:.75;direction:ltr;unicode-bidi:isolate}
