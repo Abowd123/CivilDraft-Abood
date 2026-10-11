@@ -1,0 +1,22 @@
+/* ═══ الجولة التعريفية ═══ */
+#tour{position:fixed;inset-inline-start:16px;bottom:82px;z-index:var(--z-tour);
+ width:min(330px,88vw)}
+#tour[hidden]{display:none}
+#tour .tc{background:var(--bg3);border:1px solid var(--ln2);
+ border-radius:var(--r3);
+ box-shadow:var(--sh3),var(--edge);overflow:hidden}
+#tour .th{display:flex;justify-content:space-between;align-items:center;gap:8px;
+ padding:10px 13px;border-bottom:1px solid var(--ln);
+ color:var(--brand);font-weight:600;font-size:12px}
+#tour .tn{color:var(--fg3);font-size:11px}
+#tour .tb{padding:12px 13px;color:var(--fg2);font-size:12.5px;line-height:1.75}
+#tour .tb code{font-family:var(--mono);direction:ltr;display:inline-block;
+ background:var(--bg4);color:var(--fg);border:1px solid var(--ln);
+ padding:0 5px;border-radius:var(--r1)}
+#tour .tf{display:flex;gap:7px;padding:9px 13px;border-top:1px solid var(--ln)}
+#tour .tf button{background:var(--acq);color:var(--acf);
+ border:1px solid var(--acb);border-radius:var(--r2);
+ padding:5px 12px;cursor:pointer;font-size:12px}
+#tour .tf button:hover{filter:brightness(1.1)}
+#tour .tf .gh{background:transparent;color:var(--fg3);border-color:transparent}
+#tour .tf .gh:hover{background:var(--hov);color:var(--fg2);filter:none}
