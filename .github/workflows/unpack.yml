@@ -20,6 +20,7 @@ jobs:
           unzip -q CivilDraft-final.zip -x "CivilDraft/.github/*" -d /tmp/x
           rsync -a /tmp/x/CivilDraft/ ./
           rm -f CivilDraft-final.zip
+          rm -rf CivilDraft
           git config user.name "github-actions"
           git config user.email "actions@github.com"
           git add -A
