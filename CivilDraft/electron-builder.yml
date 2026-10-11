@@ -1,0 +1,57 @@
+# إعدادات بناء نسخة ويندوز — npm run dist:win (x64) · npm run dist:win:arm (arm64، اختياري)
+appId: com.civildraft.app
+productName: CivilDraft
+copyright: "CivilDraft — MIT"
+directories:
+  output: release
+  buildResources: build
+
+# ═══ ما يدخل app.asar ═══
+# قائمةٌ بيضاء: غلافُ سطح المكتب + dist المبنيّ + أيقونة النافذة + package.json (+ اعتماديات الإنتاج تلقائياً). لا شيءَ غيرها.
+# السطورُ «!» بعدها حزامٌ وحمّالات: حتى لو تسرّب إلى dist شيءٌ بالخطأ لا يُحزَم.
+# ويفحص scripts/after-pack.cjs المحتوى الفعليّ لـ app.asar ويُفشِل البناء إن وجد غريباً.
+files:
+  - desktop/**
+  - dist/**
+  - build/icon.ico
+  - package.json
+  - "!**/*.map"
+  - "!**/*.md"
+  - "!**/js/tests/**"
+  - "!**/audit/**"
+  - "!desktop/e2e/**"
+  - "!**/docs/**"
+asar: true
+afterPack: ./scripts/after-pack.cjs
+
+# ═══ التحديث التلقائي ═══
+# لا قسم publish هنا عمداً: يمرّره .github/workflows/release.yml على سطر الأوامر
+# (provider=github + owner + repo من سياق GitHub). فالبناء المحلّي لا يولّد app-update.yml،
+# ويبقى التحديث معطَّلاً فيه بصمت (desktop/updater.cjs)، ولا يحتاج بناؤك المحلّي مستودعاً ولا رمزاً.
+# اعتماديةُ الإنتاج electron-updater تُضمَّن في الحزمة تلقائياً (لا تحتاج سطراً في files).
+
+# ربط الامتداد: يعمل مع برنامج التثبيت (nsis) فقط — النسخة المحمولة لا تُسجَّل في ويندوز
+# أيقونةُ الملفّات منفصلةٌ عن أيقونة البرنامج (build/file-icon.ico ← npm run icons:file)
+fileAssociations:
+  - ext: cdraft
+    name: مشروع CivilDraft
+    description: مشروع CivilDraft
+    icon: build/file-icon.ico
+    role: Editor
+win:
+  icon: build/icon.ico
+  target:
+    - target: nsis
+      arch: [x64]
+    - target: portable
+      arch: [x64]
+nsis:
+  oneClick: false
+  perMachine: false
+  allowToChangeInstallationDirectory: true
+  createDesktopShortcut: true
+  createStartMenuShortcut: true
+  shortcutName: CivilDraft
+  artifactName: "CivilDraft-Setup-${version}.${ext}"
+portable:
+  artifactName: "CivilDraft-${version}-portable.${ext}"
