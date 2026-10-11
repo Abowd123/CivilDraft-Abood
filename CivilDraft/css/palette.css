@@ -1,0 +1,56 @@
+/* ═══ لوحة الأوامر (Ctrl+K) ═══ */
+#palette{position:fixed;inset:0;z-index:var(--z-palette);
+ background:color-mix(in srgb,#000 46%,transparent);
+ backdrop-filter:blur(2px);
+ display:flex;justify-content:center;align-items:flex-start}
+#palette[hidden]{display:none}
+#palette .pw{margin-top:12vh;width:min(560px,92vw);background:var(--bg3);
+ border:1px solid var(--ln2);border-radius:var(--r4);
+ box-shadow:var(--sh3),var(--edge);overflow:hidden}
+#palette input{width:100%;box-sizing:border-box;border:0;
+ border-bottom:1px solid var(--ln);
+ background:transparent;color:var(--fg);font:inherit;font-size:15px;
+ padding:13px var(--s-16);outline:none}
+#palette input::placeholder{color:var(--fg3)}
+#palette .pl{max-height:46vh;overflow:auto;padding:var(--s-4) 0}
+#palette .pl::-webkit-scrollbar{width:9px}
+#palette .pl::-webkit-scrollbar-thumb{background:var(--thumb);border-radius:5px}
+#palette .it{display:flex;justify-content:space-between;align-items:center;gap:var(--s-10);
+ padding:var(--s-8) var(--s-16);cursor:pointer;border-inline-start:2px solid transparent}
+#palette .it:hover{background:var(--hov)}
+#palette .it.sel{background:var(--acq);
+ border-inline-start-color:var(--ac)}
+#palette .it.sel .lb{color:var(--acf)}
+#palette .it .lb{color:var(--fg)}
+#palette .it .sb{color:var(--fg3);font-size:11.5px;
+ font-family:var(--mono);direction:ltr}
+#palette .it .dg{color:var(--wr);font-size:10.5px;font-weight:400}
+#palette .nm{padding:var(--s-16);color:var(--fg3);font-size:12.5px;text-align:center}
+#palette .ft{padding:var(--s-8) var(--s-16);border-top:1px solid var(--ln);
+ color:var(--fg3);font-size:11px}
+
+/* ═══ البيتُ والاختصارُ في النتيجة ═══ المرحلة ١ من audit/10-ui-plan.md
+   اللوحةُ كانت تُنفِّذ ولا تُعلِّم. الآن كلُّ سطرٍ يحمل «أين هي» و«بمَ
+   أستدعيها»، فالبحثُ يُعلِّم موضعَها لا يستبدله.
+   والترتيبُ بترتيبِ الحاجة: الاسمُ ثم الألقابُ ثم البيتُ ثم الاختصار. */
+#palette .it .hm{
+ flex:none; font-size:11px; color:var(--fg3);
+ padding:var(--s-2) var(--s-6); border:1px solid var(--ln); border-radius:var(--r-pill);
+ white-space:nowrap; max-width:42%; overflow:hidden;
+ text-overflow:ellipsis;
+}
+/* المدخلُ الخاصُّ يُميَّز: «لوحة العناصر ◂ زرّ +» ليس تبويباً في
+   الشريط، فلا يُقرأ كأنّه هو. */
+#palette .it .hm.ex{border-style:dashed}
+#palette .it .sc{
+ flex:none; font-size:11px; color:var(--fg2);
+ padding:var(--s-2) var(--s-6); border:1px solid var(--ln); border-radius:4px;
+ direction:ltr; unicode-bidi:isolate;
+ font-variant-numeric:tabular-nums;
+}
+#palette .it.sel .hm,#palette .it.sel .sc{border-color:currentColor}
+@media (max-width:640px){
+ /* الضيّقُ: البيتُ يبقى والألقابُ تذهب — «أين هي» أنفعُ من «بمَ
+    أُسمّيها» حين تضيق الشاشة. */
+ #palette .it .sb{display:none}
+}
