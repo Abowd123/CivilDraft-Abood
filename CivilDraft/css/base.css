@@ -1,0 +1,257 @@
+*{box-sizing:border-box}
+[hidden]{display:none!important}
+
+html,body{height:100%;margin:0}
+body{
+ background:var(--bg); color:var(--fg);
+ font:var(--fs-md,13.5px)/1.5 var(--ui);
+ display:flex; flex-direction:column; overflow:hidden;
+ -webkit-font-smoothing:antialiased; text-rendering:optimizeLegibility;
+}
+button,input,select,textarea{font-family:inherit;
+ font-size:var(--fs-sm,12.5px)}
+button{transition:background var(--t) var(--ease),
+ color var(--t) var(--ease),border-color var(--t) var(--ease),
+ box-shadow var(--t) var(--ease)}
+:focus-visible{outline:2px solid color-mix(in srgb,var(--ac) 72%,
+ transparent);outline-offset:1px}
+@media (prefers-reduced-motion:reduce){
+ *{transition:none!important;animation:none!important;
+   scroll-behavior:auto!important}
+}
+.gap{flex:1}
+.dv{width:1px;height:18px;display:inline-block;
+ background:linear-gradient(transparent,var(--ln) 22%,
+ var(--ln) 78%,transparent)}
+.mono{font-family:var(--mono)}
+
+#top{
+ flex:none; display:flex; align-items:center; gap:9px;
+ padding:var(--s-3) var(--s-10);
+ background:linear-gradient(180deg,
+  color-mix(in srgb,var(--bg3) 58%,var(--bg2)),var(--bg2));
+ border-bottom:1px solid var(--ln);
+ box-shadow:var(--sh1),var(--edge);
+}
+.brand{color:var(--brand);letter-spacing:.6px;font-size:15px;
+ font-weight:600}
+#top .ver,#top .tip{color:var(--fg3);font-size:11.5px;
+ letter-spacing:.15px}
+#top .tip{opacity:.8}
+
+/* ═══ البحثُ الظاهرُ و«مؤخّراً» ═══ المرحلة ١ من audit/10-ui-plan.md
+   البحثُ يبدو **حقلاً** وهو زرّ: اللوحةُ تملك حقلَها الحقيقيّ، وحقلانِ
+   يتنافسان على التركيز يسرق أحدهما الكتابةَ من سطرِ الأوامر. فالشكلُ
+   يدعو إلى الكتابةِ والسلوكُ يفتح اللوحةَ — ولا التباسَ لأنّ اللوحةَ
+   تفتح بالحقلِ مركَّزاً فالكتابةُ تتصل بلا انقطاع.
+   والمقاسُ ٤٤ بكسلاً للهدفِ اللمسيّ (P5-001) والخطُّ ١٦ (P5-002). */
+#srchBtn{
+ display:flex; align-items:center; gap:7px;
+ min-height:44px; padding:0 var(--s-10);
+ font-size:max(16px,1rem); font-family:inherit;
+ color:var(--fg2); background:var(--bg);
+ border:1px solid var(--ln); border-radius:var(--r1);
+ cursor:text; text-align:start;
+ min-width:min(240px,34vw);
+ transition:border-color var(--t-sm), background var(--t-sm);
+}
+#srchBtn:hover{border-color:var(--acon,var(--brand))}
+#srchBtn:focus-visible{outline:2px solid var(--acon,var(--brand));
+ outline-offset:1px}
+#srchBtn .si{font-size:17px;color:var(--fg3);flex:none}
+#srchBtn .sl{flex:1;color:var(--fg3);overflow:hidden;
+ white-space:nowrap;text-overflow:ellipsis}
+#srchBtn .sk{flex:none;font-size:11px;color:var(--fg3);
+ padding:var(--s-2) var(--s-5);border:1px solid var(--ln);border-radius:4px;
+ direction:ltr;unicode-bidi:isolate}
+
+/* «مؤخّراً»: ستُّ بلاطاتٍ تتعلّم من الاستعمال. لا تُعلَن فارغةً
+   (الوسمُ hidden حتى يوجد أوّلُ استعمال) فلا مساحةٌ تطلب انتباهاً
+   بلا محتوى. */
+#recent{display:flex;align-items:center;gap:var(--s-3)}
+#recent button{
+ min-width:44px; min-height:44px;
+ display:grid; place-items:center;
+ color:var(--fg2); background:transparent;
+ border:1px solid transparent; border-radius:7px; cursor:pointer;
+}
+#recent button:hover{background:var(--bg3);border-color:var(--ln)}
+#recent button:focus-visible{outline:2px solid var(--acon,var(--brand));
+ outline-offset:1px}
+
+/* الضيّقُ: النصُّ يذهب والأيقونةُ تبقى، و«مؤخّراً» يُطوى كلُّه —
+   الترتيبُ معلَنٌ: البحثُ آخرُ ما يُفقَد. */
+@media (max-width:1100px){
+ #recent{display:none}
+}
+/* ٧٦٨ لا رقمٌ جديد: «هاتفٌ عامّ» في مصفوفةِ الأجهزة المعلَنةِ في
+   css/touch.css — ونقطةُ توقفٍ جديدةٌ تحتاج سطراً في ذاك الجدول
+   (حارسٌ في a11y-css يفرضه). */
+@media (max-width:768px){
+ #srchBtn{min-width:44px;padding:0 9px}
+ #srchBtn .sl,#srchBtn .sk{display:none}
+}
+
+#main{flex:1;display:flex;min-height:0}
+#work{flex:1;display:flex;flex-direction:column;min-width:0}
+#stage{flex:1;position:relative;min-height:0;background:var(--bg);
+ direction:ltr}
+#cv{position:absolute;inset:0;display:block;outline:none;
+ cursor:crosshair;touch-action:none}
+
+.num,input.num{direction:ltr;unicode-bidi:isolate;text-align:start}
+.num,input.num,#stPos,#clLive,#log{font-variant-numeric:tabular-nums}
+
+#icoSheet{position:absolute;width:0;height:0;overflow:hidden}
+.ic{flex:none;stroke:currentColor;fill:none;stroke-width:1.6;
+ stroke-linecap:round;stroke-linejoin:round}
+
+#cmdline{
+ position:relative; flex:none;
+ display:flex; align-items:center; gap:9px;
+ padding:var(--s-8) var(--s-12); background:var(--bg2);
+ border-top:1px solid var(--ln);
+}
+#clSug{
+ position:absolute; inset-inline:10px; bottom:calc(100% + 4px);
+ z-index:var(--z-sug); background:var(--bg3);
+ border:1px solid var(--ln2); border-radius:var(--r3);
+ overflow:hidden; box-shadow:var(--sh3),var(--edge);
+ font-family:var(--mono); font-size:12px;
+}
+#clSug .it{padding:var(--s-6) 11px;color:var(--fg2);cursor:pointer}
+#clSug .it:hover{background:var(--hov);color:var(--fg)}
+#clSug .it.sel{background:var(--acq);color:var(--acf);
+ box-shadow:inset 2px 0 0 var(--ac)}
+#clPrompt{
+ color:var(--brand); font-family:var(--mono); font-size:12px;
+ white-space:nowrap; min-width:200px; letter-spacing:.2px;
+}
+#clIn{
+ flex:1; min-width:80px; background:var(--bg4); color:var(--fg);
+ border:1px solid var(--fldbd); border-radius:var(--r2);
+ padding:7px 11px; font-family:var(--mono);
+ box-shadow:var(--sunken);
+}
+#clIn:focus{outline:none;border-color:var(--ac);
+ box-shadow:var(--focus)}
+#clLive{
+ color:var(--ok); font-family:var(--mono); font-size:12px;
+ white-space:nowrap; min-width:130px;
+ direction:ltr; unicode-bidi:isolate; text-align:start;
+}
+
+#log{
+ flex:none; height:120px; min-height:32px; max-height:60vh;
+ overflow-y:auto; resize:vertical;
+ padding:var(--s-6) var(--s-10);
+ background:var(--bg4); border-top:1px solid var(--ln);
+ font-family:var(--mono); font-size:11.5px; line-height:1.6;
+}
+#log::-webkit-scrollbar{width:9px}
+#log::-webkit-scrollbar-thumb{background:var(--thumb);
+ border-radius:5px}
+#log .ln{white-space:pre-wrap;word-break:break-word;
+ padding-inline-start:7px;border-inline-start:2px solid transparent}
+#log .ok{color:var(--ok);border-inline-start-color:
+ color-mix(in srgb,var(--ok) 45%,transparent)}
+#log .wr{color:var(--wr);border-inline-start-color:
+ color-mix(in srgb,var(--wr) 45%,transparent)}
+#log .er{color:var(--er);border-inline-start-color:
+ color-mix(in srgb,var(--er) 55%,transparent)}
+#log .in{color:var(--fg3)}
+#log .ln .ab{margin-inline-start:var(--s-10);padding:0 var(--s-8);font:inherit;
+ color:var(--fg2);background:var(--bg3);border:1px solid var(--ln);
+ border-radius:3px;cursor:pointer}
+#log .ln .ab:hover{color:var(--er);border-color:var(--er)}
+#log .ln .ab:disabled{opacity:.5;cursor:default}
+
+#status{
+ flex:none; position:relative; display:flex; align-items:center;
+ gap:var(--s-8); padding:var(--s-5) var(--s-12); background:var(--bg2);
+ border-top:1px solid var(--ln); color:var(--fg3); font-size:11.5px;
+}
+#status button{
+ background:transparent; color:var(--fg3);
+ border:1px solid transparent; border-radius:var(--r-pill);
+ padding:var(--s-3) var(--s-10); cursor:pointer;
+}
+#status button:hover{background:var(--hov);color:var(--fg2)}
+#status button.on{background:var(--acq);color:var(--acf);
+ border-color:var(--acb)}
+#status #osBtn{padding:var(--s-2) var(--s-5)}
+#stPos{color:var(--fg2);min-width:132px;
+ direction:ltr;unicode-bidi:isolate;text-align:start}
+#stInfo{color:var(--ok);max-width:38vw;overflow:hidden;
+ text-overflow:ellipsis;white-space:nowrap}
+#stSel{color:var(--wr)}
+
+#osPop{
+ position:absolute; bottom:calc(100% + 6px); z-index:var(--z-pop);
+ background:var(--bg3); border:1px solid var(--ln2);
+ border-radius:var(--r3); padding:var(--s-10) var(--s-12); min-width:190px;
+ box-shadow:var(--sh3),var(--edge);
+}
+#osPop h5{margin:0 0 7px;color:var(--fg2);font-size:12px;
+ font-weight:600;letter-spacing:.2px}
+#osPop label{display:flex;align-items:center;gap:var(--s-6);
+ padding:var(--s-3) 0;color:var(--fg2);cursor:pointer;border-radius:var(--r1)}
+#osPop label:hover{color:var(--fg)}
+#osPop .pi{margin-top:var(--s-8);padding-top:var(--s-8);
+ border-top:1px solid var(--ln);display:flex;align-items:center;
+ gap:var(--s-6);color:var(--fg2)}
+#osPop .pi input{width:54px;background:var(--bg4);color:var(--fg);
+ border:1px solid var(--fldbd);border-radius:var(--r1);padding:var(--s-2) var(--s-5)}
+#osPop .fr{display:flex;gap:var(--s-5);margin-top:var(--s-8)}
+#osPop .fr button{flex:1;background:var(--bg2);color:var(--fg2);
+ border:1px solid var(--ln);border-radius:var(--r1);padding:var(--s-4) 0;
+ cursor:pointer}
+#osPop .fr button:hover{background:var(--hov);color:var(--fg);
+ border-color:var(--ln2)}
+
+#helpBox{
+ position:fixed; inset-block-start:6vh; inset-inline:0;
+ width:min(720px,92vw); margin-inline:auto;
+ max-height:88vh; z-index:var(--z-dialog);
+ background:var(--bg3); border:1px solid var(--ln2);
+ border-radius:var(--r4); box-shadow:var(--sh3),var(--edge);
+ display:flex; flex-direction:column; overflow:hidden;
+}
+#helpBox .hd{
+ flex:none; display:flex; align-items:center;
+ justify-content:space-between; gap:var(--s-10); padding:11px var(--s-16);
+ background:linear-gradient(180deg,
+  color-mix(in srgb,var(--bg2) 88%,var(--brand) 4%),var(--bg2));
+ border-bottom:1px solid var(--ln); color:var(--brand);
+ font-weight:600; letter-spacing:.2px;
+}
+#helpBox .hd button{
+ background:var(--bg4); color:var(--fg2);
+ border:1px solid var(--ln); border-radius:var(--r2);
+ padding:var(--s-4) 11px; cursor:pointer;
+}
+#helpBox .hd button:hover{background:var(--hov);color:var(--fg);
+ border-color:var(--ln2)}
+#helpBox .bd{flex:1;overflow-y:auto;padding:var(--s-12) 18px 20px}
+#helpBox .bd h4{color:var(--ac);font-size:12.5px;margin:18px 0 7px;
+ letter-spacing:.2px}
+#helpBox .bd h4:first-child{margin-top:0}
+#helpBox .bd ul{margin:0 0 11px;padding-inline-start:20px}
+#helpBox .bd li{margin:var(--s-5) 0;color:var(--fg2)}
+#helpBox .bd code{
+ font-family:var(--mono); background:var(--bg4); color:var(--fg);
+ padding:var(--s-px) var(--s-6); border-radius:var(--r1);
+ border:1px solid var(--ln);
+}
+
+table.tools{width:100%;border-collapse:collapse;font-size:12px}
+table.tools th{
+ text-align:start; color:var(--fg3); font-weight:600;
+ padding:var(--s-6) 9px; border-bottom:1px solid var(--ln2);
+ letter-spacing:.3px;
+}
+table.tools td{
+ padding:var(--s-6) 9px; border-bottom:1px solid var(--ln);
+ color:var(--fg2); vertical-align:top;
+}
+table.tools tr:hover td{background:var(--hov);color:var(--fg)}
