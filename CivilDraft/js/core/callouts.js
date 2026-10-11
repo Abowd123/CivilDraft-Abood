@@ -1,0 +1,64 @@
+/* ═══ وسم التفصيلة — DC ═══
+   بيانات مشروعٍ غير مكانية تربط منفذ مصدرٍ بمنفذ هدفٍ في ورقتين،
+   بترقيمٍ حرفيّ تلقائي. الرمزُ يُرسَم في فضاء النموذج بعلامة covp
+   فلا يظهر إلا في تركيب منفذه المصدر، وسطرُ الهدف يُضاف في composeSheet
+   تحت إطار المنفذ الهدف — ولا كود تصدير جديد. */
+import {S,touchView,txtH} from "./state.js";
+import {V} from "./validate.js";
+import {newId} from "./units.js";
+
+const R=v=>Math.round(v);
+
+/* A..Z, AA, AB … (أول حرف حرّ لا الأقصى+1) */
+const AZ=i=>{let s="";i++;while(i>0){
+ const m=(i-1)%26; s=String.fromCharCode(65+m)+s; i=(i-m-1)/26}
+ return s||"A"};
+export const nextCalloutLabel=()=>{
+ const used=new Set((S.callouts||[]).map(c=>String(c.label||"").toUpperCase()));
+ let i=0;
+ while(used.has(AZ(i)))i++;
+ return AZ(i);
+};
+export const calloutById=id=>(S.callouts||[]).find(c=>c.id===id)||null;
+
+export function addCallout(o){
+ const p=o||{};
+ const v=V("callout",p);            /* يُقرَّب pos ويُرفَض المعكوس */
+ const ok=(sid,vid)=>(S.sheets||[]).some(
+  s=>s.id===sid&&(s.viewports||[]).some(x=>x.id===vid));
+ if(!ok(v.srcSheet,v.srcVp))
+  throw new Error("منفذ المصدر غير موجود في ورقة المصدر");
+ if(!ok(v.tgtSheet,v.tgtVp))
+  throw new Error("منفذ الهدف غير موجود في ورقة الهدف");
+ if(!Array.isArray(S.callouts))S.callouts=[];
+ const c={id:newId("DC"),
+  label:(p.label!=null&&String(p.label).trim())
+   ?String(p.label).trim().slice(0,4):nextCalloutLabel(),
+  srcSheet:v.srcSheet, srcVp:v.srcVp,
+  tgtSheet:v.tgtSheet, tgtVp:v.tgtVp,
+  pos:v.pos.slice()};
+ S.callouts.push(c); touchView();
+ return c;
+}
+export function delCallout(id){
+ if(!Array.isArray(S.callouts))return false;
+ const i=S.callouts.findIndex(c=>c.id===id);
+ if(i<0)return false;
+ S.callouts.splice(i,1); touchView();
+ return true;
+}
+/* رمزُ النموذج — covp يخصّصه لمنفذ المصدر وحده في composeSheet */
+export function calloutPrims(c){
+ const L="A-CALLOUT", h=txtH(), p=c.pos;
+ return [
+  {t:"arc",L,cx:p[0],cy:p[1],r:R(h*2.2),a0:0,a1:359.9,
+   covp:c.srcVp, oid:c.id},
+  {t:"text",L,s:c.label,x:R(p[0]),y:R(p[1]+h*0.2),
+   h:R(h*1.1),al:"mc",covp:c.srcVp,oid:c.id}
+ ];
+}
+/* نصّ سطر التفصيلة تحت الإطار الهدف — يقرأ اسم الورقة المصدر */
+export const calloutTitleLine=c=>{
+ const sh=(S.sheets||[]).find(s=>s.id===c.srcSheet);
+ return `تفصيلة ${c.label} — ${sh?sh.name:c.srcSheet}`;
+};
