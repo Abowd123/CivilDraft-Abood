@@ -1,0 +1,59 @@
+/* ═══ الدليل التعليمي — نافذة عائمة (guide/floater.js) ═══
+   G4: مداخل الدليل والربط. أنماطٌ دنيا كافية لعرضٍ سليم بلا بياض؛
+   بقية العناصر (gd-sec/gd-home…) تتوارث الخطوط والألوان العامة. */
+#gdFloater{position:fixed;inset-inline-start:36px;top:72px;width:min(420px,90vw);
+ max-height:78vh;display:flex;flex-direction:column;background:var(--bg,#fff);
+ border:1px solid var(--bd,#ccc);border-radius:10px;box-shadow:0 12px 40px #0003;z-index:var(--z-guide)}
+#gdFloater[hidden]{display:none}
+.gd-fh{display:flex;align-items:center;justify-content:space-between;
+ padding:8px 12px;border-bottom:1px solid var(--bd,#ccc);cursor:move;user-select:none}
+.gd-fx{border:0;background:transparent;cursor:pointer;font-size:14px}
+.gd-body{overflow:auto;padding:12px;flex:1}
+.gd-sec{margin:10px 0}
+.gd-sec h5{margin:0 0 4px}
+.gd-head .gd-t{font-weight:bold;font-size:15px}
+.gd-head .gd-m{color:var(--muted,#666);font-size:12px;margin-bottom:6px}
+.gd-modes{display:flex;gap:6px;margin:8px 0}
+.gd-modes button{flex:1;padding:6px;cursor:pointer}
+.gd-canvas{width:100%;height:220px;border:1px solid var(--bd,#ccc);border-radius:6px;
+ display:block;margin:6px 0}
+.gd-events{max-height:110px;overflow:auto;font-size:12px;border:1px solid var(--bd,#ccc);
+ border-radius:6px;padding:4px}
+.gd-ev{padding:2px 4px}
+.gd-ev.ok{color:#1a7f37}
+.gd-ev.err{color:#c0392b}
+.gd-foot{display:flex;gap:6px;flex-wrap:wrap;margin-top:10px}
+.gd-try{font-weight:bold;cursor:pointer}
+.gd-rel{cursor:pointer}
+.gd-home .gd-cov{margin-bottom:8px;font-size:13px}
+.gd-search input{width:100%;box-sizing:border-box;padding:6px}
+.gd-results{display:flex;flex-direction:column;gap:4px;margin-top:8px}
+.gd-res-i{display:flex;justify-content:space-between;padding:6px;cursor:pointer;
+ border:1px solid var(--bd,#ccc);border-radius:6px;background:transparent}
+.gd-empty{color:var(--muted,#666);padding:6px}
+.gd-miss{padding:12px;color:var(--muted,#666)}
+.gd-unit{margin:10px 0}
+.gd-lesson{display:block;width:100%;text-align:start;padding:6px;margin:2px 0;cursor:pointer}
+
+/* ═══ لوحة الإرساء المصغّرة (#guidePane — مرحلة ٩أ، 16.1) ═══
+   قسمٌ في العمود الجانبي، بديلٌ فوريّ لا يحتاج توقيع
+   openPanel/closePanel؛ يستهلك نفس catalog.search وwire.guideOpen. */
+#guidePane .gd-prow{display:flex;gap:6px;margin-bottom:6px}
+#guidePane .gd-prow input{flex:1;box-sizing:border-box;padding:5px}
+#guidePane .gd-prow button{white-space:nowrap;cursor:pointer}
+#guidePane .gd-t{display:flex;justify-content:space-between;align-items:center;
+ width:100%;box-sizing:border-box;padding:6px;margin:2px 0;cursor:pointer;
+ text-align:start;border:1px solid var(--bd,#ccc);border-radius:6px;background:transparent}
+#guidePane .gd-t small{color:var(--muted,#666);font-size:11px}
+
+/* ═══ معاينة مصغّرة سريعة (guide/peek.js — مرحلة ٩ب، 16.6) ═══
+   طبقةٌ أخفّ من #gdFloater الكامل: بلا سحبٍ ولا أوضاع، فقط عنوانٌ
+   وهدفٌ أوّل وزرّ انتقالٍ للشرح الكامل. */
+#gdPeek{position:fixed;inset-inline-end:36px;bottom:72px;width:min(280px,86vw);
+ background:var(--bg,#fff);border:1px solid var(--bd,#ccc);border-radius:10px;
+ box-shadow:0 8px 28px #0003;padding:10px 12px;z-index:var(--z-peek)}
+#gdPeek[hidden]{display:none}
+.gd-peek-hd{display:flex;align-items:center;justify-content:space-between;gap:8px}
+.gd-peek-x{border:0;background:transparent;cursor:pointer;font-size:13px}
+.gd-peek-goal{margin:6px 0;font-size:13px;color:var(--muted,#666)}
+.gd-peek-full{width:100%;padding:6px;cursor:pointer;font-weight:bold}
